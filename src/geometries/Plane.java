@@ -9,8 +9,8 @@ public class Plane implements Geometry {
     primitives.Vector _normal;
 
     public Plane(Point3D p1, Point3D p2, Point3D p3) {
-        _p = new Point3D(p1.get_x(), p2.get_y(),p3.get_z());
-        _normal = new Vector(Point3D.ZERO);
+        _p = new Point3D(p1.get_x(), p2.get_y(), p3.get_z());
+        _normal = null;
     }
 
     public Plane(Point3D _p, Vector _normal) {
@@ -24,5 +24,13 @@ public class Plane implements Geometry {
     }
     public Vector getNormal(){
         return getNormal(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Plane{" +
+                "_p =" + _p.toString() +
+                ", _normal=" + _normal.toString() +
+                '}';
     }
 }
