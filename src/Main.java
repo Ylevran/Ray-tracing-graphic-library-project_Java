@@ -1,3 +1,7 @@
+// Exercise 1
+// Shmuel Segal 052970464 shmuelse@gmail.com
+// Yossef Levran 332484609 yossef.levran@gmail.com
+
 import primitives.*;
 import static java.lang.System.out;
 import static primitives.Util.*;

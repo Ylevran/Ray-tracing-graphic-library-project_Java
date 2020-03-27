@@ -8,5 +8,10 @@ import primitives.Vector;
  * who are implementing getNormal method.
   */
 public interface Geometry {
+    /**
+     * get Normal Vector
+     * @param p point3D
+     * @return normal vector
+     */
     Vector getNormal(Point3D p);
 }
