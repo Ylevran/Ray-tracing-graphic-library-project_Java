@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.*;
+
 /**
  * Ray class is the basic class representing a ray in a
  * 3D system
@@ -42,4 +44,13 @@ public class Ray {
      * @return _POO
      */
     public Point3D getPOO() { return new Point3D(_POO._x._coord, _POO._y._coord, _POO._z._coord);}
+
+    /**
+     * @author  Dan Zilberstein
+     * @param length
+     * @return new Point3D
+     */
+    public Point3D getTargetPoint(double length) {
+        return isZero(length ) ? _POO : _POO.add(_direction.scale(length));
+    }
 }
