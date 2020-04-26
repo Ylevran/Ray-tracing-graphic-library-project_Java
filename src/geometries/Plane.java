@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.*;
+
 /**
  * Plane class is the basic class representing a plane in a
  *  3D system
@@ -59,6 +61,24 @@ public class Plane implements Geometry {
 
     @Override
     public List<Point3D> findIntersections(Ray ray) {
+        Point3D p0 = ray.getPOO();
+        Vector v = ray.getDirection();
+
+        if (p0 == _p)
+            return List.of(p0);
+
+        double nv = _normal.dotProduct(v);
+        if (isZero(nv))
+            return null;
+
+        double nQMinusP0 = _normal.dotProduct(_p.subtract(p0));
+        if (isZero(nQMinusP0))
+            return null;
+
+        double t = alignZero(nQMinusP0 / nv);
+        if (t > 0)
+            return List.of(p0.add(v.scale(t)));
+
         return null;
     }
 }

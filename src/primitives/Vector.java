@@ -140,7 +140,7 @@ public class Vector {
 
     /**
      * Vector Normalisation
-     * @return the same Vector after normalisation
+     * @return the same Vector after normalization
      * @throws ArithmeticException if length = 0
      */
     public Vector normalize() {

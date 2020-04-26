@@ -55,11 +55,13 @@ public class Sphere extends RadialGeometry {
         Point3D p0 = ray.getPOO();
         Vector v = ray.getDirection();
         Vector u;
+
         try {
             u = _center.subtract(p0);   // p0 == _center
         } catch (IllegalArgumentException e) {
             return List.of(ray.getTargetPoint(_radius));
         }
+
         double tm = alignZero(v.dotProduct(u));
         double dSquared = (tm == 0) ? u.lengthSquared() : u.lengthSquared() - tm * tm;
         double thSquared = alignZero(_radius * _radius - dSquared);
@@ -71,6 +73,7 @@ public class Sphere extends RadialGeometry {
 
         double t1 = alignZero(tm - th);
         double t2 = alignZero(tm + th);
+
         if (t1 <= 0 && t2 <= 0) return null;
         if (t1 > 0 && t2 > 0) return List.of(ray.getTargetPoint(t1), ray.getTargetPoint(t2)); //P1 , P2
         if (t1 > 0)
