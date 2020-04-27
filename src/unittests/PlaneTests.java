@@ -50,7 +50,7 @@ public class PlaneTests {
         assertEquals("Ray's line out of plane", 1, plane.findIntersections(new Ray(new Point3D(1, 0, 0), new Vector(-1, 0, 1))).size());
 
         //TC02: Ray's neither orthogonal nor parallel to the plane and not intersects the plane (0 points)
-      //  assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(1, 0, 0), new Vector(-1, 0, 1))));
+        assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(1, 0, 0), new Vector(2, -1, 0))));
 
 
         // =============== Boundary Values Tests ==================
@@ -62,6 +62,20 @@ public class PlaneTests {
         // TC12: Ray are not included in the plane (0 points)
         assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(1, 0, 0), new Vector(1, -1, 0))));
 
+
+        // **** Group: Ray's line is orthogonal to the plane
+        //TC13 Ray is  orthogonal to the plane before
+        assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(-1, 0, 0), new Vector(-2, 0, 0))));
+
+        //TC14 Ray is  orthogonal to the plane after
+        assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(1, 0, 0), new Vector(2, 0, 0))));
+
+        //TC15 Ray is  orthogonal in the plane
+        assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(0, 0, 0), new Vector(1, 0, 0))));
+
+        //TC16 Ray is neither orthogonal nor parallel to the plane and begins in
+        //the same point which appears as reference point in the plane (Q)
+        assertEquals("Ray's line is in plane", null, plane.findIntersections(new Ray(new Point3D(0, 0, 0), new Vector(1, 0, 0))));
 
 
 
