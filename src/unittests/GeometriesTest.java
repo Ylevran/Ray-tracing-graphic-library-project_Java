@@ -11,6 +11,10 @@ import static org.junit.Assert.*;
 
 public class GeometriesTest {
 
+    /**
+     * Test Method for
+     * {@link Geometries#findIntersections(Ray)}
+     */
     @Test
     public void findIntersections() {
         Sphere sphere = new Sphere(1d, new Point3D(3, 0 ,0));

@@ -1,5 +1,6 @@
 package unittests;
 
+import geometries.Plane;
 import geometries.Polygon;
 import geometries.Triangle;
 import org.junit.Test;
@@ -30,6 +31,10 @@ public class TriangleTest {
     }
 
 
+    /**
+     * Test Method for
+     * {@link Triangle#findIntersections(Ray)}
+     */
     @Test
     public void testFindIntersections() {
         Triangle triangle = new Triangle(
