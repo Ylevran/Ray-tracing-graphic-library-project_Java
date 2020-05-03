@@ -8,6 +8,13 @@ import primitives.Vector;
 import static primitives.Util.isZero;
 
 
+/**
+ * Class to represent a camera
+ *
+ * @author Yosef Lavran & Shmulik Segal
+ *
+ * @param _p0 - Point3D: Position of the center of camera
+ */
 public class Camera {
 
     Point3D _p0;
@@ -18,6 +25,15 @@ public class Camera {
     // ***************** Constructors ********************** //
 
 
+    /**
+     *  Constructor of camera
+     * @param _p0
+     *            - Point3D: Position of center of the camera
+     * @param _vTo
+     *            - Vector: Direction vector to the middle of the screen
+     * @param _vUp
+     *            - Vector: Direction vector up
+     */
     public Camera(Point3D _p0, Vector _vTo, Vector _vUp) {
 
         //if the vectors are not orthogonal, throw exception.
@@ -34,6 +50,25 @@ public class Camera {
 
     // ***************** Operations ******************** //
 
+    /**
+     *
+     * Construct ray through pixel
+     *
+     * @param nX
+     *            - number of pixels in the screen width
+     * @param nY
+     *            - number of pixels in the screen height
+     * @param j
+     *             - "y" rate of the pixel
+     * @param i
+     *             - "x" rate of the pixel
+     * @param screenDistance
+     *            - distance from the camera to the screen
+     * @param screenWidth
+     *
+     * @param screenHeight
+     * @return  ray from camera to the middle of the given pixel
+     */
     public Ray constructRayThroughPixel(int nX, int nY, int j, int i, double screenDistance, double screenWidth,
                                         double screenHeight) {
 
