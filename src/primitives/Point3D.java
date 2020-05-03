@@ -38,6 +38,19 @@ public class Point3D {
         this(new Coordinate(_x), new Coordinate(_y), new Coordinate(_z));
     }
 
+
+    /**
+     * Copy constructor
+     *
+     * @param p
+     */
+    public Point3D(Point3D p) {
+        this._x = new Coordinate(p._x);
+        this._y = new Coordinate(p._y);
+        this._z = new Coordinate(p._z);
+    }
+
+
     /**
      * x coordinate getter
      * @return x coordinate
