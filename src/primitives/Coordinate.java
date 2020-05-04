@@ -15,6 +15,9 @@ public final class Coordinate {
      */
     final double _coord;
 
+
+    public static final Coordinate ZERO = new Coordinate(0.0);
+
     /**
      * Coordinate constructor receiving a coordinate value
      *

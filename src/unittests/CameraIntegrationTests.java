@@ -22,6 +22,8 @@ public class CameraIntegrationTests {
 
 
     static int intersectionsCount = 0;
+    int Nx = 3;
+    int Ny = 3;
 
     /******  Help function to throw rays through the all pixels ******/
 
@@ -59,8 +61,6 @@ public class CameraIntegrationTests {
     @Test
     public void constructRayThroughPixelWithSphere() {
 
-        int Nx = 3;
-        int Ny = 3;
 
         //TC01: The radius of Sphere is 1 (2 points)
         Camera cam = new Camera(Point3D.ZERO, new Vector(0, 0, 1), new Vector(0, -1, 0));
@@ -91,6 +91,22 @@ public class CameraIntegrationTests {
 
         assertEquals("Sphere of radius 2", 10,  findIntersectionsOnSphere(Nx,Ny,sph,cam,1,3,3));
         System.out.println("count: " + intersectionsCount);
+
+    }
+
+    @Test
+    public void constructRayThroughPixelWithPlane() {
+
+        Camera camera = new Camera(Point3D.ZERO,new Vector(0,-1,0),new Vector(0,0,-1));
+
+        //TC01: Check when the plane is perpendicular (9 points)
+        Plane plane = new Plane(new Point3D(Coordinate.ZERO,Coordinate.ZERO,new Coordinate(-50)),new Vector(0,0,-1));
+
+        assertEquals("plane is perpendicular", 9,findIntersectionsOnPlane(Nx,Ny,plane,camera,2,9,9));
+        System.out.println("count: " + intersectionsCount);
+
+
+
 
     }
 
