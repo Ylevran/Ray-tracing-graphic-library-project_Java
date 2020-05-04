@@ -5,9 +5,6 @@ import geometries.*;
 import org.junit.Test;
 import primitives.*;
 
-import javax.swing.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
