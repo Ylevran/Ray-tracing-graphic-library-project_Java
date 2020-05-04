@@ -52,4 +52,6 @@ public class CameraTests {
                 camera.constructRayThroughPixel(3, 3, 0, 1, 10, 6, 6));
 
     }
+
+
 }
