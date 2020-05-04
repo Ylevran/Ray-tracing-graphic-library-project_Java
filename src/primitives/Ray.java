@@ -53,4 +53,27 @@ public class Ray {
     public Point3D getTargetPoint(double length) {
         return isZero(length ) ? _POO : _POO.add(_direction.scale(length));
     }
+
+
+    // ***************** Administration  ******************** //
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Ray))
+            return false;
+        Ray other = (Ray) obj;
+        return _POO.equals(other._POO) && _direction.equals(other._direction);
+    }
+
+    @Override
+    public String toString() {
+        return "Ray{" +
+                "_POO=" + _POO +
+                ", _direction=" + _direction +
+                '}';
+    }
 }

@@ -7,6 +7,8 @@ import primitives.*;
 
 import static org.junit.Assert.*;
 
+
+
 public class CameraTests {
 
     /**
