@@ -9,7 +9,9 @@ import static primitives.Util.*;
 /**
  * Test program for the 1st stage
  *
- * @author Dan Zilberstein
+ * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
+ *
+ * @author Shmuel Segal, ID: 052970464, Email address: shmuelse@gmail.com
  */
 public final class Main {
 

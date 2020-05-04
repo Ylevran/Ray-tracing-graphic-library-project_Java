@@ -2,17 +2,24 @@ package unittests;
 
 import geometries.Plane;
 import org.junit.Test;
+import primitives.Coordinate;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 /**
  * Testing Planes
+ *
  * @author Yossef and Shmuel
  */
 public class PlaneTests {
+
 
     /**
      * Test method for
@@ -23,17 +30,14 @@ public class PlaneTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01: simple test
         assertEquals("Wrong plane normal",
-                new Vector(3,9,1).normalize(),
+                new Vector(3, 9, 1).normalize(),
                 new Plane(
-                        new Point3D(-1,1,2),
-                        new Point3D(-4,2,2),
-                        new Point3D(-2,1,5)).getNormal());
+                        new Point3D(-1, 1, 2),
+                        new Point3D(-4, 2, 2),
+                        new Point3D(-2, 1, 5)).getNormal());
     }
 
-    /**
-     * Test Method for
-     * {@link Plane#findIntersections(Ray)}
-     */
+
     @Test
     public void testFindIntersections() {
 
@@ -75,5 +79,13 @@ public class PlaneTests {
         assertEquals("Ray's not start at Q0", null, plane.findIntersections(new Ray(new Point3D(2, 0, 1), new Vector(0, 2, -1))));
 
 
+
+
+
+
+
+
     }
+
+
 }
