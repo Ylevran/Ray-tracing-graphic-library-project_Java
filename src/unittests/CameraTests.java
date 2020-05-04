@@ -36,6 +36,8 @@ public class CameraTests {
         assertEquals("Bad ray", new Ray(Point3D.ZERO, new Vector(-1, -1, 10)),
                 camera.constructRayThroughPixel(4, 4, 1, 1, 10, 8, 8));
 
+
+
         // =============== Boundary Values Tests ==================
         // TC11: 3X3 Center (1,1)
         assertEquals("Bad ray", new Ray(Point3D.ZERO, new Vector(0, 0, 10)),

@@ -9,7 +9,7 @@ import static primitives.Util.*;
 /**
  * Test program for the 1st stage
  *
- * @author Yosef Lavran, ID: 332484609, Email Address: yossef.levran@gmail.com
+ * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
  *
  * @author Shmuel Segal, ID: 052970464, Email address: shmuelse@gmail.com
  */
