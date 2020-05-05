@@ -11,7 +11,7 @@ import static primitives.Util.isZero;
 /**
  * Class to represent a camera
  *
- * @author Yosef Lavran & Shmulik Segal
+ * @author Yosef Levran & Shmuel Segal
  *
  * @param _p0 - Point3D: Position of the center of camera
  */

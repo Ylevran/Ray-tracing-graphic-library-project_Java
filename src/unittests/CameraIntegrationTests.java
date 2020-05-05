@@ -33,41 +33,14 @@ public class CameraIntegrationTests {
     float screenDistance =1;
 
 
-    /******  Help functions to throw rays through the all pixels ******/
+    /******  Help function to throw rays through the all pixels ******/
 
-    private int findIntersectionsOnSphere(int Nx, int Ny, Sphere sphere, Camera camera, double screenDistance, double screenWidth, double screenHeight) {
-
+    private int findIntersectionsOnGeo(int Nx, int Ny, Geometry geo, Camera camera, double screenDistance, double screenWidth, double screenHeight) {
         intersectionsCount = 0;
         for (int i = 0; i < Nx; ++i)
             for (int j = 0; j < Ny; ++j) {
                 Ray ray = camera.constructRayThroughPixel(Nx, Ny, j, i, screenDistance, screenWidth, screenHeight);
-                List<Point3D> result = sphere.findIntersections(ray);
-                if (result != null)
-                    intersectionsCount += result.size();
-            }
-        return intersectionsCount;
-    }
-
-    private int findIntersectionsOnPlane(int Nx, int Ny, Plane plane, Camera camera, double screenDistance, double screenWidth, double screenHeight) {
-
-        intersectionsCount = 0;
-        for (int i = 0; i < Nx; ++i)
-            for (int j = 0; j < Ny; ++j) {
-                Ray ray = camera.constructRayThroughPixel(Nx, Ny, j, i, screenDistance, screenWidth, screenHeight);
-                List<Point3D> result = plane.findIntersections(ray);
-                if (result != null)
-                    intersectionsCount += result.size();
-            }
-        return intersectionsCount;
-    }
-
-    private int findIntersectionsOnTriangle(int Nx, int Ny, Triangle triangle, Camera camera, double screenDistance, double screenWidth, double screenHeight) {
-
-        intersectionsCount = 0;
-        for (int i = 0; i < Nx; ++i)
-            for (int j = 0; j < Ny; ++j) {
-                Ray ray = camera.constructRayThroughPixel(Nx, Ny, j, i, screenDistance, screenWidth, screenHeight);
-                List<Point3D> result = triangle.findIntersections(ray);
+                List<Point3D> result = geo.findIntersections(ray);
                 if (result != null)
                     intersectionsCount += result.size();
             }
@@ -86,25 +59,36 @@ public class CameraIntegrationTests {
 
         //TC01: The radius of Sphere is 1 (2 points)
         Sphere sphere = new Sphere(1, new Point3D(0, 0, 3));
-        assertEquals("Sphere of radius 1", 2, findIntersectionsOnSphere(Nx,Ny,sphere,camera01,screenDistance,screenWidth,screenHeight));
+        assertEquals("Sphere of radius 1", 2,
+                findIntersectionsOnGeo(Nx,Ny,sphere,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
 
         //TC02: The radius of Sphere is 2.5 (18 points)
         sphere = new Sphere(2.5, new Point3D(0, 0, 2.5));
-        assertEquals("Sphere of radius 2.5", 18, findIntersectionsOnSphere(Nx,Ny,sphere,camera02,screenDistance,screenWidth,screenHeight));
+        assertEquals("Sphere of radius 2.5", 18,
+                findIntersectionsOnGeo(Nx,Ny,sphere,camera02,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
 
         // TC03: The radius of Sphere is 2 (10 points)
         sphere = new Sphere(2, new Point3D(0, 0, 2));
-        assertEquals("Sphere of radius 2", 10, findIntersectionsOnSphere(Nx,Ny,sphere,camera02,screenDistance,screenWidth,screenHeight));
+        assertEquals("Sphere of radius 2", 10,
+                findIntersectionsOnGeo(Nx,Ny,sphere,camera02,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
 
         // TC04: The radius of Sphere is 4 (9 points)
-        sphere = new Sphere(2, new Point3D(0, 0, 2));
-        assertEquals("Sphere of radius 2", 10,  findIntersectionsOnSphere(Nx,Ny,sphere,camera02,screenDistance,screenWidth,screenHeight));
+        sphere = new Sphere(4, new Point3D(0, 0, 2));
+        assertEquals("Sphere of radius 4", 9,
+                findIntersectionsOnGeo(Nx,Ny,sphere,camera01,screenDistance,screenWidth,screenHeight));
+        System.out.println("count: " + intersectionsCount);
+
+
+        // TC05: The Sphere is before the view Plane, radius of 0.5 (0 points)
+        sphere = new Sphere(0.5, new Point3D(0, 0, -1));
+        assertEquals("Sphere of radius 4", 0,
+                findIntersectionsOnGeo(Nx,Ny,sphere,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
     }
@@ -119,19 +103,21 @@ public class CameraIntegrationTests {
     public void constructRayThroughPixelWithPlane() {
 
 
-        //TC01: (9 points)
+        //TC01: Plane is parallel to view Plane (9 points)
         Plane plane = new Plane(new Point3D(0, 0, 3), new Vector(0, 0, 1));
-        assertEquals("Incorrect amount of intersections", 9,findIntersectionsOnPlane(Nx,Ny,plane,camera01,screenDistance,screenWidth,screenHeight));
+        assertEquals("Plane parallel", 9,findIntersectionsOnGeo(Nx,Ny,plane,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
-        //TC02: (9 points)
+
+        //TC02: Plane is not parallel to view Plane - 01  (9 points)
         plane = new Plane(new Point3D(0.5,-1.5,2),new Point3D(0,0,2.5),new Point3D(0,1.5,3));
-        assertEquals("Incorrect amount of intersections", 9,findIntersectionsOnPlane(Nx,Ny,plane,camera01,screenDistance,screenWidth,screenHeight));
+        assertEquals("Plane not parallel - 01", 9,findIntersectionsOnGeo(Nx,Ny,plane,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
-        //TC03: (6 points)
+
+        //TC03: Plane is not parallel to view Plane - 02 (6 points)
         plane = new Plane(new Point3D(0.5, -2, 2), new Point3D(0, 0, 4), new Point3D(0, 2, 6));
-        assertEquals("Incorrect amount of intersections", 6,findIntersectionsOnPlane(Nx,Ny,plane,camera01,screenDistance,screenWidth,screenHeight));
+        assertEquals("Plane not parallel - 02", 6,findIntersectionsOnGeo(Nx,Ny,plane,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
     }
@@ -144,16 +130,17 @@ public class CameraIntegrationTests {
     @Test
     public void constructRayThroughPixelWithTriangle() {
 
-        //TC01: (One intersection point)
+        //TC01: One intersection point
         Triangle triangle = new Triangle(new Point3D(0,-1,2),
                 new Point3D(1,1,2),new Point3D(-1,1,2));
-        assertEquals("Incorrect amount of intersections", 1,findIntersectionsOnTriangle(Nx,Ny,triangle,camera01,screenDistance,screenWidth,screenHeight));
+        assertEquals("One intersection", 1,findIntersectionsOnGeo(Nx,Ny,triangle,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
+
 
         //TC02: (Two intersection point)
         triangle = new Triangle(new Point3D(0, -20, 2),
                 new Point3D(1, 1, 2), new Point3D(-1, 1, 2));
-        assertEquals("Incorrect amount of intersections", 2,findIntersectionsOnTriangle(Nx,Ny,triangle,camera01,screenDistance,screenWidth,screenHeight));
+        assertEquals("Two intersections", 2,findIntersectionsOnGeo(Nx,Ny,triangle,camera01,screenDistance,screenWidth,screenHeight));
         System.out.println("count: " + intersectionsCount);
 
     }
