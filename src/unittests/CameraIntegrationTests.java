@@ -78,6 +78,22 @@ public class CameraIntegrationTests {
 
 
         // TC04: The radius of Sphere is 4 (9 points)
+        sph = new Sphere(4, new Point3D(0, 0, 2));
+
+        count = 0;
+        for (int i = 0; i < Nx; ++i) {
+            for (int j = 0; j < Ny; ++j) {
+                Ray ray = cam.constructRayThroughPixel(3, 3, j, i, 1, 3, 3);
+                List<Point3D> results = sph.findIntersections(ray);
+                if (results != null)
+                    count += results.size();
+            }
+        }
+        assertEquals("Sphere of radius 4", 10, count);
+        System.out.println("count: " + count);
+
+
+        // TC05: The Sphere is before the view Plane (0 points)
         sph = new Sphere(2, new Point3D(0, 0, 2));
 
         count = 0;
@@ -89,9 +105,11 @@ public class CameraIntegrationTests {
                     count += results.size();
             }
         }
-        assertEquals("Sphere of radius 2", 10, count);
+        assertEquals("Sphere before", null, count);
         System.out.println("count: " + count);
     }
+
+
 
 
 
