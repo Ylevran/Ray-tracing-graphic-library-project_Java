@@ -25,6 +25,7 @@ public class CameraIntegrationTests {
 
     static int intersectionsCount = 0;
 
+    //Nx & Ny represent the number of pixels that exist in one slot
     int Nx = 3;
     int Ny = 3;
 
@@ -37,8 +38,8 @@ public class CameraIntegrationTests {
 
     private int findIntersectionsOnGeo(int Nx, int Ny, Geometry geo, Camera camera, double screenDistance, double screenWidth, double screenHeight) {
         intersectionsCount = 0;
-        for (int i = 0; i < Nx; ++i)
-            for (int j = 0; j < Ny; ++j) {
+        for (int i = 0; i < screenWidth; ++i)
+            for (int j = 0; j < screenHeight; ++j) {
                 Ray ray = camera.constructRayThroughPixel(Nx, Ny, j, i, screenDistance, screenWidth, screenHeight);
                 List<Point3D> result = geo.findIntersections(ray);
                 if (result != null)

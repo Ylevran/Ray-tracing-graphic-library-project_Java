@@ -25,6 +25,7 @@ public class ImageWriter {
 
     private String _imageName;
 
+
     // ***************** Constructors ********************** //
     /**
      * Image Writer constructor accepting image name and View Plane parameters,
