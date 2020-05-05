@@ -12,6 +12,7 @@ package primitives;
  * @author Dan Zilberstein
  */
 public class Color {
+
     /**
      * The internal fields tx`o maintain RGB components as double numbers from 0 to
      * whatever...

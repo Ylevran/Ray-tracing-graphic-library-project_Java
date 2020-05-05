@@ -21,13 +21,6 @@ public class Vector {
         this._head = new Point3D(p._x._coord, p._y._coord, p._z._coord);
     }
 
-    /**
-     * Copy Constructor
-     * @param v Vector
-     */
-    public Vector(Vector v) {
-        this(v._head);
-    }
 
     /**
      * Vector Constructor receiving two 3D Points
@@ -46,6 +39,15 @@ public class Vector {
      */
     public Vector(double x,double y, double z) {
         this(new Point3D(x,y,z));
+    }
+
+
+    /**
+     * Copy Constructor
+     * @param v Vector
+     */
+    public Vector(Vector v) {
+        this(v._head);
     }
 
     /**

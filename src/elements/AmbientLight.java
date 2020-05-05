@@ -34,7 +34,6 @@ public class AmbientLight {
 
     //***************** Constructors **********************//
 
-
     /**
      * @param _intensity Filling Light Intensity
      * @param _Ka Sets the intensity of the light

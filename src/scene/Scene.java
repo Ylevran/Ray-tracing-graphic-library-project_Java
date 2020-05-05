@@ -7,6 +7,14 @@ import geometries.Intersectable;
 import geometries.Sphere;
 import primitives.Color;
 
+
+/**
+ *  Represents a scene
+ *
+ * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
+ *
+ * @author Shmuel Segal, ID: 052970464, Email address: shmuelse@gmail.com
+ */
 public class Scene {
 
     private String _name;
@@ -20,24 +28,26 @@ public class Scene {
     private double _distance;
 
 
+    // ***************** Constructors ********************** //
 
-
-    public Scene(String _name, Color _background, AmbientLight _ambientLight,
-                 Geometries _geometries, Camera _camera, double _distance) {
-        this._name = _name;
-        this._background = _background;
-        this._ambientLight = _ambientLight;
-        this._geometries = _geometries;
-        this._camera = _camera;
-        this._distance = _distance;
-    }
-
+    /**
+     * Constructor - initializes the fields with default values
+     *
+     * @param _sceneName
+     *                 - the name of the scene (String)
+     */
     public Scene(String _sceneName) {
         this._name = _sceneName;
+        this._background = null;
+        this._ambientLight = null;
+        this._camera = null;
+        this._distance = 0.0;
+        _geometries = new Geometries(); // Initialize empty list
     }
 
-    //***************** Getters/setters ****************************//
 
+
+    //***************** Getters/setters ****************************//
 
     /**
      * Getter
@@ -51,7 +61,7 @@ public class Scene {
     /**
      * Getter
      *
-     * @return the _background
+     * @return the _background color
      */
     public Color getBackground() {
         return _background;
@@ -145,9 +155,18 @@ public class Scene {
     }
 
 
+    // ***************** Operations ******************** //
+
+
+    /**
+     * Adds geometric shape to the scene
+     *
+     * @param intersectables
+     *                      - The geometric shapes to add
+     */
     public void addGeometries(Intersectable... intersectables) {
-        for (Intersectable i:intersectables ) {
-            _geometries.add(i);
+        for (Intersectable geometry:intersectables ) {
+            _geometries.add(geometry);
         }
 
     }

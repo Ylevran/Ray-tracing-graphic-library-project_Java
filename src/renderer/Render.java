@@ -8,9 +8,17 @@ import scene.Scene;
 
 import java.util.List;
 
+
+/**
+ *
+ * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
+ * @author Shmuel Segal, ID: 052970464, Email address: shmuelse@gmail.com
+ */
 public class Render {
-    private Scene _scene;
+
     private ImageWriter _imageWriter;
+    private Scene _scene;
+
 
     // ***************** Constructors ********************** //
 
@@ -36,6 +44,12 @@ public class Render {
     }
 
 
+    // ***************** Operations ******************** //
+
+    /**
+     *  Throws rays through the all pixels and for each ray - if it's got
+     *  intersection points with the shapes of the scene - paints the closest point
+     */
     public void renderImage() {
         Camera camera = _scene.getCamera();
         Intersectable geometries = _scene.getGeometries();
@@ -66,26 +80,56 @@ public class Render {
 
     }
 
+
+    /**
+     *  Prints grid for the background of the image for test
+     *
+     * @param interval
+     *                 - The interval between line to line
+     * @param separator
+     *
+     */
     public void printGrid(int interval, java.awt.Color separator) {
-        double width = this._imageWriter.getWidth();
-        double height = this._imageWriter.getHeight();
+
+        double columns = this._imageWriter.getNx();
+        double rows = this._imageWriter.getNy();
 
         //writing the lines
-        for(int row =0; row<height;++row)
-            for (int column = interval; column<interval ;column+=interval){
-                _imageWriter.writePixel(column,row,separator);
-                _imageWriter.writePixel(row,column,separator);
+        for(int row =0; row<rows;++row)
+            for (int column = 0; column<columns ; ++column){
+                if(column % interval == 0 || row % interval ==0)
+                {
+                    _imageWriter.writePixel(column,row,separator);
+                }
+               // _imageWriter.writePixel(column,row,separator);
+              //  _imageWriter.writePixel(row,column,separator);
             }
     }
+
 
     public void writeToImage() {
         _imageWriter.writeToImage();
     }
 
+
+    /**
+     * Wrapper function of sending to the _calcColor function
+     *
+     * @param point
+     * @return - The result from the extended calcColor function
+     */
     private java.awt.Color calcColor(Point3D point) {
         return _scene.getAmbientLight().getIntensity();
     }
 
+
+    /**
+     *  Finds the closest point to the camera from all intersection points
+     *
+     * @param intersectionPoints
+     * @return  - The closest point to the camera
+     *
+     */
     private Point3D getClosestPoint(List<Point3D> intersectionPoints) {
 
         if (intersectionPoints == null) {
