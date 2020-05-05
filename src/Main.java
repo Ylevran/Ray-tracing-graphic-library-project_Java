@@ -1,4 +1,4 @@
-// Exercise 1
+// Exercise 04
 // Shmuel Segal 052970464 shmuelse@gmail.com
 // Yossef Levran 332484609 yossef.levran@gmail.com
 
@@ -7,7 +7,7 @@ import static java.lang.System.out;
 import static primitives.Util.*;
 
 /**
- * Test program for the 1st stage
+ * Exercise 04: edit elements package, Camera and Creating rays
  *
  * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
  *
