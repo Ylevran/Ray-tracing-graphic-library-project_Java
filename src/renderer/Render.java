@@ -10,6 +10,7 @@ import java.util.List;
 
 
 /**
+ * Class for rendering Scene
  *
  * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
  * @author Shmuel Segal, ID: 052970464, Email address: shmuelse@gmail.com
@@ -72,7 +73,7 @@ public class Render {
                     _imageWriter.writePixel(column,row,background);
                 } else {
                     Point3D closestPoint = getClosestPoint(intersectionPoints);
-                    _imageWriter.writePixel(column-1,row-1,calcColor(closestPoint));
+                    _imageWriter.writePixel(column,row,calcColor(closestPoint));
 
                 }
             }
@@ -101,8 +102,6 @@ public class Render {
                 {
                     _imageWriter.writePixel(column,row,separator);
                 }
-               // _imageWriter.writePixel(column,row,separator);
-              //  _imageWriter.writePixel(row,column,separator);
             }
     }
 

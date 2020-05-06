@@ -20,9 +20,6 @@ public class Scene {
     private String _name;
     private Color _background;
     private AmbientLight _ambientLight;
-
-
-
     private Geometries _geometries;
     private Camera _camera;
     private double _distance;
