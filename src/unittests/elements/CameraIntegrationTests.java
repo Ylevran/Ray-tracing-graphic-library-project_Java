@@ -1,4 +1,4 @@
-package unittests;
+package unittests.elements;
 
 import elements.Camera;
 import geometries.*;

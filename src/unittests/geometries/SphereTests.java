@@ -1,4 +1,4 @@
-package unittests;
+package unittests.geometries;
 
 import geometries.Sphere;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package unittests;
+package unittests.geometries;
 
 import geometries.Cylinder;
 import geometries.Tube;
