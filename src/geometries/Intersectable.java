@@ -12,6 +12,26 @@ import java.util.*;
 public interface Intersectable {
 
     /**
+     *
+     */
+    public static class GeoPoint {
+        public Geometry geometry;
+        public Point3D point;
+
+        // ***************** Constructors ********************** //
+
+        /**
+         * @param geometry
+         * @param point
+         */
+        public GeoPoint(Geometry geometry, Point3D point) {
+            this.geometry = geometry;
+            this.point = point;
+        }
+    }
+
+
+    /**
      * returns list of intersections between ray and the intersectable
      * @param ray Ray
      * @return list of intersections

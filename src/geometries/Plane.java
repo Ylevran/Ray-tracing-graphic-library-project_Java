@@ -12,7 +12,7 @@ import static primitives.Util.*;
  * Plane class is the basic class representing a plane in a
  *  3D system
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
     Point3D _p;
     primitives.Vector _normal;
