@@ -3,6 +3,8 @@ package geometries;
 import elements.Material;
 import primitives.*;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,34 +48,42 @@ public class Triangle extends Polygon {
     public Triangle(Color color, Point3D p1, Point3D p2, Point3D p3) {
         this(p1,p2,p3);
     }
-    
+
+
+
+    // ***************** Operations ******************** //
+
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
-        if (_plane.findIntersections(ray) == null)
-            return null;
+    public List<GeoPoint> findIntersections(Ray ray) {
 
-        List <Point3D> planeIntersection = _plane.findIntersections(ray);
+        if (_plane.findIntersections(ray) == null) return null;
+        List <GeoPoint> planeIntersections = _plane.findIntersections(ray);
 
-        Vector v1 = _vertices.get(0).subtract(ray.getPOO());
-        Vector v2 = _vertices.get(1).subtract(ray.getPOO());
-        Vector v3 = _vertices.get(2).subtract(ray.getPOO());
 
-        Vector n1 = (v1.crossProduct(v2)).normalize();
-        Vector n2 = (v2.crossProduct(v3)).normalize();
-        Vector n3 = (v3.crossProduct(v1)).normalize();
+        Point3D p0 = ray.getPoint();
+        Vector v = ray.getDirection();
 
-        double d1 = Util.alignZero(ray.getDirection().dotProduct(n1));
-        double d2 = Util.alignZero(ray.getDirection().dotProduct(n2));
-        double d3 = Util.alignZero(ray.getDirection().dotProduct(n3));
+        Vector v1 = _vertices.get(0).subtract(ray.getPoint());
+        Vector v2 = _vertices.get(1).subtract(ray.getPoint());
+        Vector v3 = _vertices.get(2).subtract(ray.getPoint());
+
+
+        double d1 = v.dotProduct(v1.crossProduct(v2));
+        if(Util.isZero(d1)) return null;
+        double d2 = v.dotProduct(v2.crossProduct(v3));
+        if(Util.isZero(d2)) return null;
+        double d3 = v.dotProduct(v3.crossProduct(v1));
+        if(Util.isZero(d3)) return null;
 
         // if the intersection is inside triangle
-        if (d1 > 0.0 && d2 > 0.0 && d3 > 0.0)
-            return planeIntersection;
+        if ((d1 > 0.0 && d2 > 0.0 && d3 > 0.0) || (d1 < 0.0 && d2 < 0.0 && d3 < 0.0)){
+            List<GeoPoint> result = new ArrayList<>();
+            for (GeoPoint geo : planeIntersections) {
+                result.add(new GeoPoint(this, geo.getPoint()));
+            }
+            return result;
+        }
 
-        if (d1 < 0.0 && d2 < 0.0 && d3 < 0.0)
-            return planeIntersection;
-
-        // else if the intersection is outside triangle
         return null;
 
     }

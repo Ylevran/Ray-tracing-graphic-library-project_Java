@@ -5,7 +5,6 @@ import primitives.*;
 
 import java.util.List;
 import static primitives.Util.*;
-import java.util.Objects;
 
 
 /**
@@ -56,15 +55,15 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
-        Point3D p0 = ray.getPOO();
+    public List<GeoPoint> findIntersections(Ray ray) {
+        Point3D p0 = ray.getPoint();
         Vector v = ray.getDirection();
         Vector u;
 
         try {
             u = _center.subtract(p0);   // p0 == _center
         } catch (IllegalArgumentException e) {
-            return List.of(ray.getTargetPoint(_radius));
+            return List.of(new GeoPoint(this,ray.getTargetPoint(_radius)));
         }
 
         double tm = alignZero(v.dotProduct(u));
@@ -80,10 +79,13 @@ public class Sphere extends RadialGeometry {
         double t2 = alignZero(tm + th);
 
         if (t1 <= 0 && t2 <= 0) return null;
-        if (t1 > 0 && t2 > 0) return List.of(ray.getTargetPoint(t1), ray.getTargetPoint(t2)); //P1 , P2
+        if (t1 > 0 && t2 > 0) {
+            return List.of(new GeoPoint(this, (ray.getTargetPoint(t1)))
+                    ,new GeoPoint(this, (ray.getTargetPoint(t2))));//P1 , P2
+        }
         if (t1 > 0)
-            return List.of(ray.getTargetPoint(t1));
+            return List.of(new GeoPoint(this,(ray.getTargetPoint(t1))));
         else
-            return List.of(ray.getTargetPoint(t2));
+            return List.of(new GeoPoint(this,(ray.getTargetPoint(t2))));
     }
 }

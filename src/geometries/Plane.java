@@ -61,24 +61,29 @@ public class Plane extends Geometry {
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
-        Point3D p0 = ray.getPOO();
-        Vector v = ray.getDirection();
 
-        if (p0 == _p)
-            return List.of(p0);
+        Vector p0Q;
 
-        double nv = _normal.dotProduct(v);
+        try{
+            p0Q = _p.subtract(ray.getPoint());
+                    }
+        catch (IllegalArgumentException e){
+            return null; // ray starts from point Q - no intersections
+        }
+
+
+        double nv = _normal.dotProduct(ray.getDirection());
         if (isZero(nv))
             return null;
 
-        double nQMinusP0 = _normal.dotProduct(_p.subtract(p0));
-        if (isZero(nQMinusP0))
+        double t = alignZero(_normal.dotProduct(p0Q) / nv);
+
+        if (t <= 0){
             return null;
+        }
 
-        double t = alignZero(nQMinusP0 / nv);
-        if (t > 0)
-            return List.of(p0.add(v.scale(t)));
+        GeoPoint geo  = new GeoPoint(this, ray.getTargetPoint(t));
+            return List.of(geo);
 
-        return null;
     }
 }
