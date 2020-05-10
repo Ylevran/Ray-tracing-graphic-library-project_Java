@@ -1,5 +1,6 @@
 package geometries;
 
+import elements.Material;
 import primitives.*;
 
 import java.util.List;
@@ -26,6 +27,10 @@ public class Sphere extends RadialGeometry {
                 _center.get_x(),
                 _center.get_y(),
                 _center.get_z());
+    }
+
+    public Sphere(Color color, Material material, int radius, Point3D point3D) {
+        this(radius,point3D);
     }
 
     /**

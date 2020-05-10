@@ -2,10 +2,13 @@ package scene;
 
 import elements.AmbientLight;
 import elements.Camera;
+import elements.Light;
 import geometries.Geometries;
 import geometries.Intersectable;
-import geometries.Sphere;
 import primitives.Color;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -23,7 +26,7 @@ public class Scene {
     private Geometries _geometries;
     private Camera _camera;
     private double _distance;
-
+    private List<Light> _lights = null;
 
     // ***************** Constructors ********************** //
 
@@ -166,5 +169,12 @@ public class Scene {
             _geometries.add(geometry);
         }
 
+    }
+
+    public void addLights(Light light) {
+        if(_lights == null){
+            _lights = new ArrayList<>();
+        }
+        _lights.add(light);
     }
 }

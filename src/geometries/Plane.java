@@ -60,7 +60,7 @@ public class Plane extends Geometry {
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
+    public List<GeoPoint> findIntersections(Ray ray) {
         Point3D p0 = ray.getPOO();
         Vector v = ray.getDirection();
 

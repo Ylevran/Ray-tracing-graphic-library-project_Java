@@ -1,9 +1,7 @@
 package geometries;
 
-import primitives.Point3D;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import elements.Material;
+import primitives.*;
 
 import java.util.List;
 
@@ -13,6 +11,11 @@ import java.util.List;
  */
 public class Triangle extends Polygon {
 
+
+    public Triangle(Color color, Material material, Point3D p1, Point3D p2, Point3D p3) {
+        this(color,p1,p2,p3);
+    }
+
     @Override
     public String toString() {
         String result = "";
@@ -21,6 +24,8 @@ public class Triangle extends Polygon {
         }
         return result;
     }
+
+    // ***************** Constructors ********************** //
 
     /**
      * Triangle Constructor receiving three points
@@ -32,6 +37,15 @@ public class Triangle extends Polygon {
         super(new Point3D[]{p1, p2, p3});
     }
 
+    /**
+     * @param color
+     * @param p1
+     * @param p2
+     * @param p3
+     */
+    public Triangle(Color color, Point3D p1, Point3D p2, Point3D p3) {
+        this(p1,p2,p3);
+    }
     
     @Override
     public List<Point3D> findIntersections(Ray ray) {

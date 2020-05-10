@@ -24,7 +24,7 @@ public class LightsTests {
         Scene scene = new Scene("Test scene");
         scene.setCamera(new Camera(new Point3D(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(1000);
-        scene.setBackground(Color.BLACK);
+        scene.setBackground(Color .BLACK);
         scene.setAmbientLight(new AmbientLight(Color.BLACK, 0));
 
         scene.addGeometries(
