@@ -4,6 +4,9 @@ import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import static primitives.Util.*;
 
 /**
@@ -12,7 +15,10 @@ import static primitives.Util.*;
  */
 public class Cylinder extends Tube {
 
-    double _height;
+    private double _height;
+
+
+    // ***************** Constructors ********************** //
 
     /**
      * Cylinder Constructor receiving radius, axis and height
@@ -25,6 +31,22 @@ public class Cylinder extends Tube {
         this._height = _height;
     }
 
+
+    // ***************** Getters/Setters ********************** //
+
+
+    /**
+     * @return
+     */
+    public double getHeight(){
+        return _height;
+    }
+
+    /**
+     * @param point point to calculate the normal
+     * @return normal
+     * @author Dan Zilberstein
+     */
     @Override
     public Vector getNormal(Point3D point) {
         Point3D o = _axisRay.getPoint();
@@ -46,12 +68,19 @@ public class Cylinder extends Tube {
         return point.subtract(o).normalize();
     }
 
-    /**
-     * height getter
-     * @return _height
-     */
-    public double get_height() {
-        return _height;
+    // ***************** Operations ******************** //
+
+    @Override
+    public List<GeoPoint> findIntersections(Ray ray) {
+        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
+        List<GeoPoint> result = new LinkedList<>();
+        if (intersections != null) {
+            for (GeoPoint geoPoint : intersections) {
+                result.add(new GeoPoint(this, geoPoint.getPoint()));
+            }
+            return result;
+        }
+        return null;
     }
 
     @Override

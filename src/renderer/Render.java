@@ -2,6 +2,7 @@ package renderer;
 
 import elements.Camera;
 import geometries.Intersectable;
+import geometries.Intersectable.GeoPoint;
 import primitives.*;
 import primitives.Color;
 import scene.Scene;
@@ -68,12 +69,13 @@ public class Render {
         for (int row = 0; row < nX; ++row)
             for (int column = 0; column < nY; ++column) {
                 ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
-                List<Point3D> intersectionPoints = geometries.findIntersections(ray);
+                List<GeoPoint> intersectionPoints = geometries.findIntersections(ray);
                 if(intersectionPoints == null){
                     _imageWriter.writePixel(column,row,background);
                 } else {
-                    Point3D closestPoint = getClosestPoint(intersectionPoints);
-                    _imageWriter.writePixel(column,row,calcColor(closestPoint));
+                    GeoPoint closestPoint = getClosestPoint(intersectionPoints);
+                    java.awt.Color pixelColor = calcColor(closestPoint).getColor();
+                    _imageWriter.writePixel(column,row,pixelColor);
 
                 }
             }
@@ -129,26 +131,24 @@ public class Render {
      * @return  - The closest point to the camera
      *
      */
-    private Point3D getClosestPoint(List<Point3D> intersectionPoints) {
-
-        if (intersectionPoints == null) {
-            throw new IllegalArgumentException("The list of points cannot be null");
-        }
+    private GeoPoint getClosestPoint(List<GeoPoint> intersectionPoints) {
 
         // initialization
+        GeoPoint result = null;
         double minDistance = Double.MAX_VALUE;
 
-        Point3D result = null;
-        Point3D P0 = new Point3D(_scene.getCamera().get_p0());
+        Point3D p0 = this._scene.getCamera().get_p0();
 
-        for(Point3D p:intersectionPoints){
-            double distance = P0.distance(p);
+        for (GeoPoint geo : intersectionPoints) {
+            Point3D pt = geo.getPoint();
+            double distance = p0.distance(pt);
 
-            if(P0.distance(p) < minDistance){
-                result = p;
+            if (distance < minDistance) {
                 minDistance = distance;
+                result = geo;
             }
         }
         return result;
+
     }
 }

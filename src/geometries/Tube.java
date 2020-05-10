@@ -64,7 +64,7 @@ public class Tube extends RadialGeometry{
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
+    public List<GeoPoint> findIntersections(Ray ray) {
         return null;
     }
 }
