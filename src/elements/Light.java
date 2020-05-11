@@ -25,7 +25,7 @@ public abstract class Light {
      * Gets the original Light intensity I<sub>0</sub>
      * @return Light intensity
      */
-    public Color getIntensity(){return _intensity;}
+    public Color getIntensity(){return new Color(_intensity);}
 
     /**
      * Getter

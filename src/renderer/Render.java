@@ -6,7 +6,7 @@ import geometries.Intersectable.GeoPoint;
 import primitives.*;
 import primitives.Color;
 import scene.Scene;
-
+import geometries.Intersectable.GeoPoint;
 import java.util.List;
 
 
@@ -113,14 +113,15 @@ public class Render {
     }
 
 
-    /**
-     * Wrapper function of sending to the _calcColor function
-     *
-     * @param point
-     * @return - The result from the extended calcColor function
-     */
-    private java.awt.Color calcColor(Point3D point) {
+
+    private Color calcColor(GeoPoint gp) {
         return _scene.getAmbientLight().getIntensity();
+
+//        Color result = _scene.getAmbientLight().getIntensity();
+//        result = result.add(gp.getGeometry().getEmissionLight());
+//        List<LightSource> lights = _scene.getLightSources();
+
+
     }
 
 

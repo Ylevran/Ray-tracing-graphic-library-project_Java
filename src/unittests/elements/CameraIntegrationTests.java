@@ -41,7 +41,7 @@ public class CameraIntegrationTests {
         for (int i = 0; i < screenWidth; ++i)
             for (int j = 0; j < screenHeight; ++j) {
                 Ray ray = camera.constructRayThroughPixel(Nx, Ny, j, i, screenDistance, screenWidth, screenHeight);
-                List<Point3D> result = geo.findIntersections(ray);
+                List<Intersectable.GeoPoint> result = geo.findIntersections(ray);
                 if (result != null)
                     intersectionsCount += result.size();
             }

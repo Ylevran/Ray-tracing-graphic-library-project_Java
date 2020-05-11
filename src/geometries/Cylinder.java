@@ -42,6 +42,23 @@ public class Cylinder extends Tube {
         return _height;
     }
 
+
+
+    // ***************** Operations ******************** //
+
+    @Override
+    public List<GeoPoint> findIntersections(Ray ray) {
+        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
+        List<GeoPoint> result = new LinkedList<>();
+        if (intersections != null) {
+            for (GeoPoint geoPoint : intersections) {
+                result.add(new GeoPoint(this, geoPoint.getPoint()));
+            }
+            return result;
+        }
+        return null;
+    }
+
     /**
      * @param point point to calculate the normal
      * @return normal
@@ -66,21 +83,6 @@ public class Cylinder extends Tube {
 
         o = o.add(v.scale(t));
         return point.subtract(o).normalize();
-    }
-
-    // ***************** Operations ******************** //
-
-    @Override
-    public List<GeoPoint> findIntersections(Ray ray) {
-        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
-        List<GeoPoint> result = new LinkedList<>();
-        if (intersections != null) {
-            for (GeoPoint geoPoint : intersections) {
-                result.add(new GeoPoint(this, geoPoint.getPoint()));
-            }
-            return result;
-        }
-        return null;
     }
 
     @Override

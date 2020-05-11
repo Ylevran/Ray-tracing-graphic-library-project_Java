@@ -22,7 +22,7 @@ public class RenderTests {
      */
     @Test
     public void basicRenderTwoColorTest() {
-        Scene scene = new Scene("Test scene");
+        Scene scene = new Scene("Test scene first");
         scene.setCamera(new Camera(Point3D.ZERO, new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(100);
         scene.setBackground(new Color(75, 127, 90));
