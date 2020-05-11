@@ -7,7 +7,7 @@ import static java.lang.System.out;
 import static primitives.Util.*;
 
 /**
- * Exercise 05: Color / light support, add schema, and build a photo with fill lighting
+ * Exercise 06: Color / light support, add schema, and build a photo with fill lighting
  *
  * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
  *

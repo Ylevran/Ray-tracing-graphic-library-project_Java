@@ -11,7 +11,10 @@ import primitives.Color;
  */
 public abstract class Light {
 
-     Color _intensity;
+     protected Color _intensity;
+
+
+    //***************** Constructors **********************//
 
     /**
      * Initialize Lights color intensity
@@ -20,6 +23,10 @@ public abstract class Light {
     public Light(Color c) {
         this._intensity = c;
     }
+
+
+
+    // ***************** Getters/Setters ********************** //
 
     /**
      * Gets the original Light intensity I<sub>0</sub>

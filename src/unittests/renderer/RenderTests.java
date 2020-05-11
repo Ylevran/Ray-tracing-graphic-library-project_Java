@@ -22,7 +22,7 @@ public class RenderTests {
      */
     @Test
     public void basicRenderTwoColorTest() {
-        Scene scene = new Scene("Test scene first");
+        Scene scene = new Scene("basic Render Two Color Test");
         scene.setCamera(new Camera(Point3D.ZERO, new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(100);
         scene.setBackground(new Color(75, 127, 90));
@@ -36,7 +36,7 @@ public class RenderTests {
                 new Triangle(new Point3D(-100, 0, 100), new Point3D(0, 100, 100), new Point3D(-100, 100, 100)),
                 new Triangle(new Point3D(-100, 0, 100), new Point3D(0, -100, 100), new Point3D(-100, -100, 100)));
 
-        ImageWriter imageWriter = new ImageWriter("base render test", 500, 500, 500, 500);
+        ImageWriter imageWriter = new ImageWriter("basic Render Two Color Test", 500, 500, 500, 500);
         Render render = new Render(imageWriter, scene);
 
         render.renderImage();
@@ -46,7 +46,7 @@ public class RenderTests {
 
     @Test
     public void basicRenderMultiColorTest() {
-        Scene scene = new Scene("Test scene");
+        Scene scene = new Scene("basic Render Multi Color Test");
         scene.setCamera(new Camera(Point3D.ZERO, new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(100);
         scene.setBackground(Color.BLACK);
@@ -64,7 +64,7 @@ public class RenderTests {
                 new Triangle(new Color(java.awt.Color.GREEN),
                         new Point3D(-100, 0, 100), new Point3D(0, -100, 100), new Point3D(-100, -100, 100))); // upper left
 
-        ImageWriter imageWriter = new ImageWriter("color render test", 500, 500, 500, 500);
+        ImageWriter imageWriter = new ImageWriter("basic Render Multi Color Test", 500, 500, 500, 500);
         Render render = new Render(imageWriter, scene);
 
         render.renderImage();

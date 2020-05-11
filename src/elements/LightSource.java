@@ -13,6 +13,8 @@ import primitives.Vector;
 public interface LightSource {
 
 
+    // ***************** Getters/Setters ********************** //
+
     /**
      * Get light source intensity as it reaches a point I<sub>P</sub>
      *

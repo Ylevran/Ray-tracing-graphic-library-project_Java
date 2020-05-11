@@ -115,13 +115,10 @@ public class Render {
 
 
     private Color calcColor(GeoPoint gp) {
-        return _scene.getAmbientLight().getIntensity();
 
-//        Color result = _scene.getAmbientLight().getIntensity();
-//        result = result.add(gp.getGeometry().getEmissionLight());
-//        List<LightSource> lights = _scene.getLightSources();
-
-
+        Color color = _scene.getAmbientLight().getIntensity();
+        color = color.add(gp._geometry.getEmissionLight());
+        return color;
     }
 
 

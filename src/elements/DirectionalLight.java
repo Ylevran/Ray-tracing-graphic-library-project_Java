@@ -23,6 +23,7 @@ public class DirectionalLight extends Light implements LightSource {
         _direction = direction.normalized();
     }
 
+    // ***************** Getters/Setters ********************** //
 
     @Override
     public Color getIntensity(Point3D p) {
