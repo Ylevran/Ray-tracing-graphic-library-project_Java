@@ -11,7 +11,7 @@ import primitives.Vector;
   */
 public abstract class Geometry implements Intersectable {
 
-     protected Color _emission;
+     protected Color _emission = new Color(java.awt.Color.BLACK);
      protected Material _material;
      
 
@@ -68,6 +68,14 @@ public abstract class Geometry implements Intersectable {
      * @return normal vector
      */
     public abstract Vector getNormal(Point3D p);
+
+
+    /**
+     * @param emission
+     */
+    public void setEmission(Color emission){
+        this._emission = emission;
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Color;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
@@ -10,15 +11,19 @@ import static primitives.Util.*;
 
 /**
  * Plane class is the basic class representing a plane in a
- *  3D system
+ * 3D system
  */
 public class Plane extends Geometry {
 
     Point3D _p;
     primitives.Vector _normal;
 
+
+    // ***************** Constructors ********************** //
+
     /**
      * Plane Constructor receiving three 3D Points
+     *
      * @param p1 first point
      * @param p2 second point
      * @param p3 third point
@@ -35,7 +40,8 @@ public class Plane extends Geometry {
 
     /**
      * Plane Constructor receiving a point and normal vector
-     * @param _p point
+     *
+     * @param _p      point
      * @param _normal vector
      */
     public Plane(Point3D _p, Vector _normal) {
@@ -43,13 +49,25 @@ public class Plane extends Geometry {
         this._normal = _normal;
     }
 
+    public Plane(Color emissionLight, Point3D _p, Vector _normal) {
+       this(_p,_normal);
+       setEmission(emissionLight);
+    }
+
+
+    // ***************** Getters/Setters ********************** //
+
     @Override
     public Vector getNormal(Point3D p) {
         return _normal;
     }
-    public Vector getNormal(){
+
+    public Vector getNormal() {
         return getNormal(null);
     }
+
+
+    // ***************** Administration  ******************** //
 
     @Override
     public String toString() {
@@ -59,31 +77,31 @@ public class Plane extends Geometry {
                 '}';
     }
 
+
+    // ***************** Operations ******************** //
+
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
 
         Vector p0Q;
 
-        try{
+        try {
             p0Q = _p.subtract(ray.getPoint());
-                    }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return null; // ray starts from point Q - no intersections
         }
 
 
         double nv = _normal.dotProduct(ray.getDirection());
-        if (isZero(nv))
+        if (isZero(nv)) //if the ray is parallel to the plane - no intersection
             return null;
 
         double t = alignZero(_normal.dotProduct(p0Q) / nv);
 
-        if (t <= 0){
+        if (t > 0) {
+            return List.of(new GeoPoint(this, ray.getTargetPoint(t)));
+        } else {
             return null;
         }
-
-        GeoPoint geo  = new GeoPoint(this, ray.getTargetPoint(t));
-            return List.of(geo);
-
     }
 }

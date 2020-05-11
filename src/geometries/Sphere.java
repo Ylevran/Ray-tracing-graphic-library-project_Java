@@ -15,6 +15,8 @@ public class Sphere extends RadialGeometry {
 
     Point3D _center;
 
+    // ***************** Constructors ********************** //
+
     /**
      * Sphere Constructor receiving radius and center
      * @param _radius
@@ -28,15 +30,19 @@ public class Sphere extends RadialGeometry {
                 _center.get_z());
     }
 
-    public Sphere(Color color, Material material, int radius, Point3D point3D) {
-        this(radius,point3D);
+    public Sphere(Color emissionLight, Material material, double radius, Point3D center) {
+        this(radius,center);
+        setEmission(emissionLight);
     }
+
+
+    // ***************** Getters/Setters ********************** //
 
     /**
      * center Getter
      * @return center
      */
-    public Point3D get_center() {
+    public Point3D getCenter() {
         return _center;
     }
 
@@ -46,6 +52,8 @@ public class Sphere extends RadialGeometry {
         return normal.normalize();
     }
 
+    // ***************** Administration  ******************** //
+
     @Override
     public String toString() {
         return "Sphere{" +
@@ -53,6 +61,8 @@ public class Sphere extends RadialGeometry {
                 ", _radius=" + _radius +
                 '}';
     }
+
+    // ***************** Operations ******************** //
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {

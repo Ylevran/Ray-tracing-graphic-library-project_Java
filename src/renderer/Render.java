@@ -70,19 +70,16 @@ public class Render {
 
         double distance = _scene.getDistance();
 
-        Ray ray;
 
         for (int row = 0; row < nX; ++row)
             for (int column = 0; column < nY; ++column) {
-                ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
+                Ray ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
                 List<GeoPoint> intersectionPoints = geometries.findIntersections(ray);
                 if(intersectionPoints == null){
                     _imageWriter.writePixel(column,row,background);
                 } else {
                     GeoPoint closestPoint = getClosestPoint(intersectionPoints);
-                    java.awt.Color pixelColor = calcColor(closestPoint).getColor();
-                    _imageWriter.writePixel(column,row,pixelColor);
-
+                    _imageWriter.writePixel(column,row,calcColor(closestPoint).getColor());
                 }
             }
 
@@ -97,7 +94,7 @@ public class Render {
      * @param separator
      *
      */
-    public void printGrid(int interval, java.awt.Color separator) {
+    public void printGrid(int interval, Color separator) {
 
         double columns = this._imageWriter.getNx();
         double rows = this._imageWriter.getNy();
@@ -107,21 +104,28 @@ public class Render {
             for (int column = 0; column<columns ; ++column){
                 if(column % interval == 0 || row % interval ==0)
                 {
-                    _imageWriter.writePixel(column,row,separator);
+
+                    _imageWriter.writePixel(column,row,separator.getColor());
                 }
             }
     }
 
-
+    /**
+     *
+     */
     public void writeToImage() {
         _imageWriter.writeToImage();
     }
 
-
-
-    private Color calcColor(GeoPoint gp) {
+    /**
+     * @param gp
+     * @return
+     */
+    private Color calcColor(GeoPoint gp)  {
 
         Color color = _scene.getAmbientLight().getIntensity();
+        color = color.add(gp._geometry.getEmissionLight());
+       /* Color color = _scene.getAmbientLight().getIntensity();
         color = color.add(gp._geometry.getEmissionLight());
         List<LightSource> lights = _scene.getLightSources();
 
@@ -142,7 +146,7 @@ public class Render {
                 double nl = alignZero(n.dotProduct(l)); //dot-product n*l
                 double nv = alignZero(n.dotProduct(v));
 
-                if(sign(nl) == sign(nv)){
+                if(sign(nl) == sign(nv)){ // Check that 𝒔𝒊𝒈𝒏(𝒍∙𝒏) == 𝒔𝒊𝒈𝒏(𝒗∙𝒏) according to Phong reflectance model
                     Color lightIntensity = lightSource.getIntensity(gp.getPoint());
                     color = color.add(calcDiffusive(kd, nl, lightIntensity),
                             calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity)
@@ -150,7 +154,7 @@ public class Render {
                 }
             }
         }
-
+*/
         return color;
     }
 
@@ -174,7 +178,9 @@ public class Render {
      * @return intensity of diffusive color (color)
      */
     private Color calcDiffusive(double kd, double nl, Color lightIntensity) {
-        if (nl < 0) nl = -nl;
+        if (nl < 0) {
+            nl = -nl;
+        }
         return lightIntensity.scale(nl * kd);
     }
 
@@ -198,6 +204,7 @@ public class Render {
      * @return
      */
     private Color calcSpecular(double ks, Vector l, Vector n, double nl, Vector v, int nShininess, Color lightIntensity) {
+
         double p = nShininess;
 
         Vector R = l.add(n.scale(-2 * nl)); // nl must not be zero!
@@ -225,7 +232,7 @@ public class Render {
         Point3D p0 = this._scene.getCamera().get_p0();
 
         for (GeoPoint geo : intersectionPoints) {
-            Point3D pt = geo.getPoint();
+            Point3D pt = geo._point;
             double distance = p0.distance(pt);
 
             if (distance < minDistance) {

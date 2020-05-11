@@ -1,7 +1,9 @@
 package geometries;
 
 import java.util.List;
+
 import primitives.*;
+
 import static primitives.Util.*;
 
 /**
@@ -80,6 +82,11 @@ public class Polygon extends Geometry {
         }
     }
 
+    public Polygon(Color emission, Point3D... vertices) {
+        this(vertices);
+        setEmission(emission);
+    }
+
     @Override
     public Vector getNormal(Point3D point) {
         return _plane.getNormal();
@@ -87,8 +94,8 @@ public class Polygon extends Geometry {
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
-        List<GeoPoint> intersection  = _plane.findIntersections(ray);
-        if(intersection == null) return null;
+        List<GeoPoint> intersection = _plane.findIntersections(ray);
+        if (intersection == null) return null;
 
         Point3D p0 = ray.getPoint();
         Vector v = ray.getDirection();
@@ -97,17 +104,17 @@ public class Polygon extends Geometry {
         Vector v2 = _vertices.get(0).subtract(p0);
 
         double sign = v.dotProduct(v1.crossProduct(v2));
-        if(isZero(sign)) return null;
+        if (isZero(sign)) return null;
 
         boolean positive = sign > 0;
-        for(int i= _vertices.size() -1; i>0;--i){
-            v1 =v2;
+        for (int i = _vertices.size() - 1; i > 0; --i) {
+            v1 = v2;
             v2 = _vertices.get(i).subtract(p0);
             sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
-            if(isZero(sign)) return null;
-            if(positive !=(sign>0)) return null;
+            if (isZero(sign)) return null;
+            if (positive != (sign > 0)) return null;
         }
-         return intersection;
+        return intersection;
 
 
     }
