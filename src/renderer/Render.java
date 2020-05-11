@@ -1,6 +1,7 @@
 package renderer;
 
 import elements.Camera;
+import elements.LightSource;
 import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 import primitives.*;
@@ -8,6 +9,8 @@ import primitives.Color;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
 import java.util.List;
+
+import static primitives.Util.alignZero;
 
 
 /**
@@ -57,11 +60,14 @@ public class Render {
         Intersectable geometries = _scene.getGeometries();
         java.awt.Color background = _scene.getBackground().getColor();
 
+        //Nx and Ny are the number of pixels in the rows and columns of the view plane
         int nX = _imageWriter.getNx();
         int nY = _imageWriter.getNy();
 
+        //width and height are the width and height of the image.
         double width = _imageWriter.getWidth();
         double height = _imageWriter.getHeight();
+
         double distance = _scene.getDistance();
 
         Ray ray;
@@ -79,7 +85,6 @@ public class Render {
 
                 }
             }
-
 
     }
 
@@ -118,7 +123,89 @@ public class Render {
 
         Color color = _scene.getAmbientLight().getIntensity();
         color = color.add(gp._geometry.getEmissionLight());
+        List<LightSource> lights = _scene.getLightSources();
+
+        Vector v = gp.getPoint().subtract(_scene.getCamera().get_p0()).normalize(); //direction from point of view to point
+        Vector n = gp.getGeometry().getNormal(gp.getPoint()); //normal ray to the surface at the point
+
+        Material material = gp.getGeometry().getMaterial();
+
+        int nShininess = material.getNShininess(); //degree of light shining of the material
+
+        double kd = material.getKd(); //degree of light return of the material
+        double ks = material.getKs(); //degree of light return shining of the material
+
+        if(_scene.getLightSources() != null){
+            for(LightSource lightSource : lights){
+
+                Vector l = lightSource.getL(gp.getPoint()); //the ray of the light
+                double nl = alignZero(n.dotProduct(l)); //dot-product n*l
+                double nv = alignZero(n.dotProduct(v));
+
+                if(sign(nl) == sign(nv)){
+                    Color lightIntensity = lightSource.getIntensity(gp.getPoint());
+                    color = color.add(calcDiffusive(kd, nl, lightIntensity),
+                            calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity)
+                    );
+                }
+            }
+        }
+
         return color;
+    }
+
+    /**
+     *
+     * @param val
+     * @return
+     */
+    private boolean sign(double val) {
+        return (val > 0d);
+    }
+
+    /**
+     * Calculate Diffusive component of light reflection.
+     * @param kd
+     *          - degree of light return of the material (double)
+     * @param nl
+     *          -  dot-product n*l
+     * @param lightIntensity
+     *          - the intensity of the light as it reaches the object (color)
+     * @return intensity of diffusive color (color)
+     */
+    private Color calcDiffusive(double kd, double nl, Color lightIntensity) {
+        if (nl < 0) nl = -nl;
+        return lightIntensity.scale(nl * kd);
+    }
+
+    /**
+     * Calculating the specular light
+     *
+     * @param ks
+     *             - degree of light return shining of the material (double)
+     * @param l
+     *             - the ray of the light
+     * @param n
+     *             - normal ray to the surface at the point
+     * @param nl
+     *             - dot-product n*l
+     * @param v
+     *             - A ray on the observer's side (camera, etc.)
+     * @param nShininess
+     *             - degree of light shining of the material (int)
+     * @param lightIntensity
+     *             - light intensity at the point
+     * @return
+     */
+    private Color calcSpecular(double ks, Vector l, Vector n, double nl, Vector v, int nShininess, Color lightIntensity) {
+        double p = nShininess;
+
+        Vector R = l.add(n.scale(-2 * nl)); // nl must not be zero!
+        double minusVR = -alignZero(R.dotProduct(v));
+        if (minusVR <= 0) {
+            return Color.BLACK; // view from direction opposite to r vector
+        }
+        return lightIntensity.scale(ks * Math.pow(minusVR, p));
     }
 
 

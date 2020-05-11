@@ -3,11 +3,13 @@ package scene;
 import elements.AmbientLight;
 import elements.Camera;
 import elements.Light;
+import elements.LightSource;
 import geometries.Geometries;
 import geometries.Intersectable;
 import primitives.Color;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -26,7 +28,7 @@ public class Scene {
     private Geometries _geometries;
     private Camera _camera;
     private double _distance;
-    private List<Light> _lights = null;
+    private List<LightSource> _lights = null;
 
     // ***************** Constructors ********************** //
 
@@ -44,7 +46,6 @@ public class Scene {
         this._distance = 0.0;
         _geometries = new Geometries(); // Initialize empty list
     }
-
 
 
     //***************** Getters/setters ****************************//
@@ -92,6 +93,14 @@ public class Scene {
      */
     public AmbientLight getAmbientLight() {
         return _ambientLight;
+    }
+
+    /**
+     * gets the List of the Lights in the scene
+     * @return list of Object inherited from lightSource
+     */
+    public List<LightSource> getLightSources() {
+        return _lights;
     }
 
     /**
@@ -171,10 +180,15 @@ public class Scene {
 
     }
 
-    public void addLights(Light light) {
+    /**
+     * adds a light source to the scene
+     * @param lights
+     *              - The light source to add
+     */
+    public void addLights(LightSource lights) {
         if(_lights == null){
-            _lights = new ArrayList<>();
+            _lights = new LinkedList<LightSource>();
         }
-        _lights.add(light);
+        _lights.add(lights);
     }
 }
