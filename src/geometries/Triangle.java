@@ -31,8 +31,16 @@ public class Triangle extends Polygon {
         super(p1, p2, p3);
     }
 
+    /**
+     * riangle Constructor receiving three points and color
+     *
+     * @param emissionLight
+     * @param p1
+     * @param p2
+     * @param p3
+     */
     public Triangle(Color emissionLight, Point3D p1, Point3D p2, Point3D p3) {
-        super(p1, p2, p3);
+        this(p1, p2, p3);
         setEmission(emissionLight);
     }
 
@@ -67,6 +75,7 @@ public class Triangle extends Polygon {
             for (GeoPoint geo : planeIntersections) {
                 result.add(new GeoPoint(this, geo.getPoint()));
             }
+            result.get(0)._geometry = this;
             return result;
         }
 

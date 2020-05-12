@@ -20,7 +20,7 @@ public interface Intersectable {
 
     /**
      * GeoPoint is just a tuple holding
-     * references to a specific point ain a specific geometry
+     * references to a specific point in a specific geometry
      */
     public static class GeoPoint {
 
@@ -41,17 +41,29 @@ public interface Intersectable {
         // ***************** Getters/Setters ********************** //
 
         /**
-         * @return
+         * @return _point
          */
         public Point3D getPoint(){
             return _point;
         }
 
         /**
-         * @return
+         * @return _geometry
          */
         public Geometry getGeometry(){
             return _geometry;
+        }
+
+
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            GeoPoint geoPoint = (GeoPoint) o;
+            return Objects.equals(_geometry, geoPoint._geometry) &&
+                    Objects.equals(_point, geoPoint._point);
         }
 
 

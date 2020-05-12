@@ -49,6 +49,12 @@ public class Plane extends Geometry {
         this._normal = _normal;
     }
 
+    /**
+     * Plane Constructor receiving a point, normal vector and color
+     * @param emissionLight
+     * @param _p
+     * @param _normal
+     */
     public Plane(Color emissionLight, Point3D _p, Vector _normal) {
        this(_p,_normal);
        setEmission(emissionLight);
