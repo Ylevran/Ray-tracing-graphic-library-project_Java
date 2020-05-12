@@ -82,6 +82,11 @@ public class Polygon extends Geometry {
         }
     }
 
+    /**
+     * Polycon Constructor receiving vertices and color
+     * @param emission
+     * @param vertices
+     */
     public Polygon(Color emission, Point3D... vertices) {
         this(vertices);
         setEmission(emission);
@@ -120,6 +125,8 @@ public class Polygon extends Geometry {
             if (isZero(sign)) return null;
             if (positive != (sign > 0)) return null;
         }
+
+        intersection.get(0)._geometry = this;
         return intersection;
 
 
