@@ -36,6 +36,12 @@ public class Tube extends RadialGeometry {
         setEmission(emissionLight);
     }
 
+    public Tube(Color emissionLight,Material _material, double _radius, Ray _axisRay) {
+        this(emissionLight,_radius,_axisRay);
+        this._material = _material;
+
+    }
+
 
     // ***************** Getters/Setters ********************** //
 

@@ -1,9 +1,6 @@
 package geometries;
 
-import primitives.Color;
-import primitives.Point3D;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.List;
 
@@ -54,8 +51,12 @@ public class Plane extends Geometry {
        setEmission(emissionLight);
     }
 
+    public Plane(Color emissionLight, Material _material, Point3D _p, Vector _normal) {
+        this(emissionLight,_p,_normal);
+        this._material = _material;
+    }
 
-    // ***************** Getters/Setters ********************** //
+        // ***************** Getters/Setters ********************** //
 
     @Override
     public Vector getNormal(Point3D p) {

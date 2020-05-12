@@ -15,19 +15,19 @@ public class DirectionalLight extends Light implements LightSource {
      * Initialize directional light with it's intensity and direction,
      * direction vector will be normalize.
      *
-     * @param colorIntensity intensity of the light
-     * @param direction      direction vector
+     * @param _colorIntensity intensity of the light
+     * @param _direction      direction vector
      */
-    public DirectionalLight(Color colorIntensity, Vector direction) {
-        super(colorIntensity);
-        _direction = new Vector(direction.normalized());
+    public DirectionalLight(Color _colorIntensity, Vector _direction) {
+        _intensity = _colorIntensity;
+        this._direction = new Vector(_direction.normalized());
     }
 
     // ***************** Getters/Setters ********************** //
 
     @Override
     public Color getIntensity(Point3D p) {
-        return _intensity;
+        return super.getIntensity();
     }
 
     @Override

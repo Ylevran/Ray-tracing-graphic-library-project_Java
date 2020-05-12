@@ -7,7 +7,7 @@ import geometries.Intersectable.GeoPoint;
 import primitives.*;
 import primitives.Color;
 import scene.Scene;
-import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -125,11 +125,9 @@ public class Render {
 
         Color color = _scene.getAmbientLight().getIntensity();
         color = color.add(gp._geometry.getEmissionLight());
-       /* Color color = _scene.getAmbientLight().getIntensity();
-        color = color.add(gp._geometry.getEmissionLight());
         List<LightSource> lights = _scene.getLightSources();
 
-        Vector v = gp.getPoint().subtract(_scene.getCamera().get_p0()).normalize(); //direction from point of view to point
+        Vector v = gp.getPoint().subtract(_scene.getCamera().getP0()).normalize(); //direction from point of view to point
         Vector n = gp.getGeometry().getNormal(gp.getPoint()); //normal ray to the surface at the point
 
         Material material = gp.getGeometry().getMaterial();
@@ -139,22 +137,21 @@ public class Render {
         double kd = material.getKd(); //degree of light return of the material
         double ks = material.getKs(); //degree of light return shining of the material
 
-        if(_scene.getLightSources() != null){
-            for(LightSource lightSource : lights){
+        if(_scene.getLightSources() != null) {
+            for (LightSource lightSource : lights) {
 
                 Vector l = lightSource.getL(gp.getPoint()); //the ray of the light
                 double nl = alignZero(n.dotProduct(l)); //dot-product n*l
                 double nv = alignZero(n.dotProduct(v));
 
-                if(sign(nl) == sign(nv)){ // Check that 𝒔𝒊𝒈𝒏(𝒍∙𝒏) == 𝒔𝒊𝒈𝒏(𝒗∙𝒏) according to Phong reflectance model
+                if (sign(nl) == sign(nv)) { // Check that 𝒔𝒊𝒈𝒏(𝒍∙𝒏) == 𝒔𝒊𝒈𝒏(𝒗∙𝒏) according to Phong reflectance model
                     Color lightIntensity = lightSource.getIntensity(gp.getPoint());
                     color = color.add(calcDiffusive(kd, nl, lightIntensity),
-                            calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity)
-                    );
+                            calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity));
                 }
             }
         }
-*/
+
         return color;
     }
 
@@ -229,7 +226,7 @@ public class Render {
         GeoPoint result = null;
         double minDistance = Double.MAX_VALUE;
 
-        Point3D p0 = this._scene.getCamera().get_p0();
+        Point3D p0 = this._scene.getCamera().getP0();
 
         for (GeoPoint geo : intersectionPoints) {
             Point3D pt = geo._point;

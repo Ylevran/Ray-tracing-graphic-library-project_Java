@@ -30,13 +30,18 @@ public class Sphere extends RadialGeometry {
                 _center.get_z());
     }
 
-    public Sphere(Color emissionLight, Material material, double radius, Point3D center) {
-        this(radius,center);
-        setEmission(emissionLight);
+    public Sphere(Color _emissionLight, double _radius, Point3D _center) {
+        this(_radius,_center);
+        setEmission(_emissionLight);
+    }
+
+    public Sphere(Color _emissionLight, Material _material, double _radius, Point3D _center) {
+        this(_emissionLight,_radius,_center);
+        this._material = _material;
     }
 
 
-    // ***************** Getters/Setters ********************** //
+        // ***************** Getters/Setters ********************** //
 
     /**
      * center Getter
