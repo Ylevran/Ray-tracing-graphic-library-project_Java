@@ -32,7 +32,7 @@ public class Sphere extends RadialGeometry {
 
     public Sphere(Color _emissionLight, double _radius, Point3D _center) {
         this(_radius,_center);
-        setEmission(_emissionLight);
+        this._emission = _emissionLight;
     }
 
     public Sphere(Color _emissionLight, Material _material, double _radius, Point3D _center) {

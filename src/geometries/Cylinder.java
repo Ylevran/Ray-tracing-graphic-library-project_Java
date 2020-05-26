@@ -31,7 +31,7 @@ public class Cylinder extends Tube {
 
     public Cylinder(Color _emissionLight, double _radius, Ray _axisRay, double _height) {
         this(_radius,_axisRay,_height);
-        setEmission(_emissionLight);
+        this._emission = _emissionLight;
     }
 
     public Cylinder(Color _emissionLight, Material _material, double _radius, Ray _axisRay, double _height) {
@@ -48,23 +48,6 @@ public class Cylinder extends Tube {
      */
     public double getHeight(){
         return _height;
-    }
-
-
-
-    // ***************** Operations ******************** //
-
-    @Override
-    public List<GeoPoint> findIntersections(Ray ray) {
-        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
-        List<GeoPoint> result = new LinkedList<>();
-        if (intersections != null) {
-            for (GeoPoint geoPoint : intersections) {
-                result.add(new GeoPoint(this, geoPoint.getPoint()));
-            }
-            return result;
-        }
-        return null;
     }
 
     /**
@@ -92,6 +75,24 @@ public class Cylinder extends Tube {
         o = o.add(v.scale(t));
         return point.subtract(o).normalize();
     }
+
+
+    // ***************** Operations ******************** //
+
+    @Override
+    public List<GeoPoint> findIntersections(Ray ray) {
+        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
+        List<GeoPoint> result = new LinkedList<>();
+        if (intersections != null) {
+            for (GeoPoint geoPoint : intersections) {
+                result.add(new GeoPoint(this, geoPoint.getPoint()));
+            }
+            return result;
+        }
+        return null;
+    }
+
+
 
     @Override
     public String toString() {

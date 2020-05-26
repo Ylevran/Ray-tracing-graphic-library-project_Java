@@ -32,9 +32,7 @@ public class Geometries implements Intersectable {
      *               - The shape to add (One of the realists of Geometry)
      */
     public void add(Intersectable... geometries) {
-        for (Intersectable geo : geometries ) {
-            _geometries.add(geo);
-        }
+       _geometries.addAll(Arrays.asList(geometries));
     }
 
     /**

@@ -8,9 +8,11 @@ package primitives;
  */
 public class Material {
 
-    private double _kD;
-    private double _kS;
-    private int _nShininess;
+    private final double _kD;
+    private final double _kS;
+    private final int _nShininess;
+
+    public final static Material DEFAULT = new Material(0d,0d,0);
 
     //***************** Constructors **********************//
 
@@ -26,14 +28,24 @@ public class Material {
         this._nShininess = _nShininess;
     }
 
-    /**
+
+/*
+    */
+/**
      * Copy constructor
      *
      * @param material
-     */
+     *//*
+
     public Material(Material material){
         this(material._kD, material._kS, material._nShininess);
     }
+
+*/
+
+
+
+
     // ***************** Getters/Setters ********************** //
 
     /**

@@ -20,22 +20,22 @@ public class PointLight extends Light implements LightSource {
     /**
      * Contractor to build a Point light
      *
-     * @param colorIntensity
-     * @param position
+     * @param _colorIntensity
+     * @param _position
      *             - Position of the light
-     * @param kC
+     * @param _kC
      *             - Coefficient of Quadratic attenuation of the light in the distance
-     * @param kL
+     * @param _kL
      *             - Coefficient of linear weakening of the light in the distance
-     * @param kQ
+     * @param _kQ
      *             - Coefficient of exponential weakening of the light at a distance
      */
-    public PointLight(Color colorIntensity, Point3D position, double kC, double kL, double kQ) {
-        super(colorIntensity);
-        this._position = new Point3D(position);
-        this._kC = kC;
-        this._kL = kL;
-        this._kQ = kQ;
+    public PointLight(Color _colorIntensity, Point3D _position, double _kC, double _kL, double _kQ) {
+        super(_colorIntensity);
+        this._position = new Point3D(_position);
+        this._kC = _kC;
+        this._kL = _kL;
+        this._kQ = _kQ;
     }
 
 

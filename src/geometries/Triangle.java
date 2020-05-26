@@ -35,7 +35,7 @@ public class Triangle extends Polygon {
      */
     public Triangle(Color emissionLight, Point3D p1, Point3D p2, Point3D p3) {
         super(p1, p2, p3);
-        setEmission(emissionLight);
+        this._emission = emissionLight;
     }
 
     /**
@@ -47,6 +47,7 @@ public class Triangle extends Polygon {
      */
     public Triangle(Color emissionLight, Material material, Point3D p1, Point3D p2, Point3D p3) {
         super(emissionLight, p1, p2, p3);
+        this._material = material;
     }
 
 
@@ -55,16 +56,16 @@ public class Triangle extends Polygon {
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
-
+        if (_plane.findIntersections(ray) == null) return null;
         List<GeoPoint> planeIntersections = _plane.findIntersections(ray);
-        if (planeIntersections == null) return null;
+
 
         Point3D p0 = ray.getPoint();
         Vector v = ray.getDirection();
 
-        Vector v1 = _vertices.get(0).subtract(p0);
-        Vector v2 = _vertices.get(1).subtract(p0);
-        Vector v3 = _vertices.get(2).subtract(p0);
+        Vector v1 = _vertices.get(0).subtract(ray.getPoint());
+        Vector v2 = _vertices.get(1).subtract(ray.getPoint());
+        Vector v3 = _vertices.get(2).subtract(ray.getPoint());
 
 
         double d1 = v.dotProduct(v1.crossProduct(v2));
@@ -80,6 +81,7 @@ public class Triangle extends Polygon {
             for (GeoPoint geo : planeIntersections) {
                 result.add(new GeoPoint(this, geo.getPoint()));
             }
+            result.get(0)._geometry = this;
             return result;
         }
 

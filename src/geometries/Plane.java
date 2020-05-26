@@ -48,17 +48,17 @@ public class Plane extends Geometry {
 
     /**
      * Plane Constructor receiving a point, normal vector and color
-     * @param emissionLight
+     * @param _emissionLight
      * @param _p
      * @param _normal
      */
-    public Plane(Color emissionLight, Point3D _p, Vector _normal) {
+    public Plane(Color _emissionLight, Point3D _p, Vector _normal) {
        this(_p,_normal);
-       setEmission(emissionLight);
+       this._emission = _emissionLight;
     }
 
-    public Plane(Color emissionLight, Material _material, Point3D _p, Vector _normal) {
-        this(emissionLight,_p,_normal);
+    public Plane(Color _emissionLight, Material _material, Point3D _p, Vector _normal) {
+        this(_emissionLight,_p,_normal);
         this._material = _material;
     }
 

@@ -30,12 +30,12 @@ public interface Intersectable {
         // ***************** Constructors ********************** //
 
         /**
-         * @param geometry
-         * @param point
+         * @param _geometry
+         * @param _point
          */
-        public GeoPoint(Geometry geometry, Point3D point) {
-            this._geometry = geometry;
-            this._point = point;
+        public GeoPoint(Geometry _geometry, Point3D _point) {
+            this._geometry = _geometry;
+            this._point = _point;
         }
 
         // ***************** Getters/Setters ********************** //

@@ -24,9 +24,9 @@ public abstract class Light {
         this._intensity = _intensity;
     }
 
-    public Light() {
+    /*public Light() {
         this._intensity = Color.BLACK;
-    }
+    }*/
 
     // ***************** Getters/Setters ********************** //
 
