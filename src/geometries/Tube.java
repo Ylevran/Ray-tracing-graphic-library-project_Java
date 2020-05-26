@@ -31,15 +31,28 @@ public class Tube extends RadialGeometry {
     }
 
     /**
-     * Tube Constructor receiving radius and axis Ray and color
+     * Tube Constructor receiving radius, axis Ray and color
      *
      * @param emissionLight
      * @param radius
      * @param axisRay
      */
-    public Tube(Color emissionLight, double radius, Ray axisRay) {
+    public Tube( Color emissionLight, double radius, Ray axisRay) {
         this(radius, axisRay);
-        setEmission(emissionLight);
+        this._emission = emissionLight;
+    }
+
+    /**
+     * Tube Constructor receiving radius, axis Ray, color and material
+     *
+     * @param radius
+     * @param axisRay
+     * @param emissionLight
+     * @param material
+     */
+    public Tube(Color emissionLight, Material material, double radius, Ray axisRay ) {
+        this(emissionLight, radius, axisRay);
+        this._material = material;
     }
 
 

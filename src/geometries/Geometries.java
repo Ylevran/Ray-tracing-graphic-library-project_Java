@@ -8,7 +8,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * Geometries is the class representing collection of geometries according to composite pattern
+ *
+ * @author Yossef
+ * @author Shmuel
+ */
 public class Geometries implements Intersectable {
 
     private List<Intersectable> _geometries = new ArrayList<>();

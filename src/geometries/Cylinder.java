@@ -1,9 +1,6 @@
 package geometries;
 
-import primitives.Color;
-import primitives.Point3D;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,16 +30,32 @@ public class Cylinder extends Tube {
     }
 
     /**
-     * Cylinder Constructor receiving radius, axis and height and color
+     * Cylinder Constructor receiving radius, axis, height and color
+     *
      * @param radius
      * @param axisRay
      * @param height
      * @param emissionLight
      */
-    public Cylinder(Color emissionLight, double radius, Ray axisRay, double height) {
+    public Cylinder( Color emissionLight, double radius, Ray axisRay, double height) {
         this(radius, axisRay, height);
-        setEmission(emissionLight);
+        this._emission = emissionLight;
     }
+
+    /**
+     * Cylinder Constructor receiving radius, axis, height, color and material
+     *
+     * @param radius
+     * @param axisRay
+     * @param height
+     * @param emissionLight
+     * @param material
+     */
+    public Cylinder( Color emissionLight, Material material, double radius, Ray axisRay, double height) {
+        this(emissionLight, radius, axisRay, height);
+        this._material = material;
+    }
+
 
 
     // ***************** Getters/Setters ********************** //

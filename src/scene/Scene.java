@@ -46,6 +46,7 @@ public class Scene {
         this._camera = null;
         this._distance = 0.0;
         _geometries = new Geometries(); // Initialize empty list
+        _lights = new LinkedList<LightSource>();
     }
 
 
@@ -175,9 +176,6 @@ public class Scene {
      *              - The light source to add
      */
     public void addLights(LightSource lights) {
-        if(_lights == null){
-            _lights = new ArrayList<>();
-        }
         _lights.add(lights);
     }
 

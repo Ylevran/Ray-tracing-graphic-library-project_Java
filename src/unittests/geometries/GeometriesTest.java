@@ -31,12 +31,12 @@ public class GeometriesTest {
 
         geometries.add(sphere, triangle, plane);
 
-        //TC02: No geometrie is intersected (0 points)
-        assertEquals("No geometrie is intersected",null,
+        //TC02: No geometry is intersected (0 points)
+        assertEquals("No geometry is intersected",null,
                 geometries.findIntersections(new Ray(new Point3D(2,-3,0), new Vector(5, 0, 0))));
 
-        //TC03: Only one geometrie is intersected (1 point)
-        assertEquals("one geometrie is intersected" ,1,
+        //TC03: Only one geometry is intersected (1 point)
+        assertEquals("one geometry is intersected" ,1,
                 (geometries.findIntersections(new Ray(new Point3D(2,-3,0), new Vector(-2, 1, 1.94)))).size());
 
         //TC04: All the geometries are intersected (4 points)

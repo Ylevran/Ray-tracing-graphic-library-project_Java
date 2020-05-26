@@ -1,9 +1,6 @@
 package geometries;
 
-import primitives.Color;
-import primitives.Point3D;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.List;
 
@@ -51,14 +48,29 @@ public class Plane extends Geometry {
 
     /**
      * Plane Constructor receiving a point, normal vector and color
+     *
      * @param emissionLight
      * @param _p
      * @param _normal
      */
-    public Plane(Color emissionLight, Point3D _p, Vector _normal) {
+    public Plane(Color emissionLight, Point3D _p, Vector _normal ) {
        this(_p,_normal);
-       setEmission(emissionLight);
+       this._emission = emissionLight;
     }
+
+    /**
+     *Plane Constructor receiving a point, normal vector, color and material
+     *
+     * @param _p
+     * @param _normal
+     * @param emissionLight
+     * @param material
+     */
+    public Plane(Color emissionLight, Material material, Point3D _p, Vector _normal ) {
+        this(emissionLight, _p,_normal);
+        this._material= material;
+    }
+
 
 
     // ***************** Getters/Setters ********************** //

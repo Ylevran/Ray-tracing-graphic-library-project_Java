@@ -1,5 +1,6 @@
 package unittests.geometries;
 
+import geometries.Intersectable;
 import geometries.Plane;
 import geometries.Polygon;
 import geometries.Triangle;
@@ -11,6 +12,8 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.Assert.*;
+
+import static geometries.Intersectable.GeoPoint;
 
 /**
  * Testing Triangles
@@ -45,7 +48,7 @@ public class TriangleTest {
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: Ray's line is inside triangle (1 point)
-        assertEquals("line is inside triangle", List.of(new Point3D(0.48, 0.52, 0.23)),
+        assertEquals("line is inside triangle" , List.of(new GeoPoint(triangle,new Point3D(0.48, 0.52, 0.23))),
                 triangle.findIntersections(new Ray(new Point3D(-1.6, 0, 0), new Vector(2.08, 0.52,0.23))));
 
         // TC02: Ray's line is outside against edge (0 points)

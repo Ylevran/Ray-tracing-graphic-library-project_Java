@@ -34,6 +34,8 @@ public class Material {
     public Material(Material material){
         this(material._kD, material._kS, material._nShininess);
     }
+
+
     // ***************** Getters/Setters ********************** //
 
     /**
