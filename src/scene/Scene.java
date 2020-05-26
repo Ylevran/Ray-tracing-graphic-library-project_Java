@@ -2,10 +2,15 @@ package scene;
 
 import elements.AmbientLight;
 import elements.Camera;
+import elements.Light;
+import elements.LightSource;
 import geometries.Geometries;
 import geometries.Intersectable;
-import geometries.Sphere;
 import primitives.Color;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -17,13 +22,14 @@ import primitives.Color;
  */
 public class Scene {
 
-    private String _name;
+    private  String _name;
+    private  Geometries _geometries;
+
     private Color _background;
     private AmbientLight _ambientLight;
-    private Geometries _geometries;
     private Camera _camera;
     private double _distance;
-
+    private List<LightSource> _lights;
 
     // ***************** Constructors ********************** //
 
@@ -41,7 +47,6 @@ public class Scene {
         this._distance = 0.0;
         _geometries = new Geometries(); // Initialize empty list
     }
-
 
 
     //***************** Getters/setters ****************************//
@@ -92,13 +97,11 @@ public class Scene {
     }
 
     /**
-     * Setter
-     *
-     * @param _name
-     *              - the name of the scene (String)
+     * gets the List of the Lights in the scene
+     * @return list of Object inherited from lightSource
      */
-    public void setName(String _name) {
-        this._name = _name;
+    public List<LightSource> getLightSources() {
+        return _lights;
     }
 
     /**
@@ -121,14 +124,6 @@ public class Scene {
         this._ambientLight = _ambientLight;
     }
 
-    /**
-     * Setter
-     *
-     * @param _geometries
-     */
-    public void setGeometries(Geometries _geometries) {
-        this._geometries = _geometries;
-    }
 
     /**
      * Setter
@@ -167,4 +162,24 @@ public class Scene {
         }
 
     }
+
+    public void removeGeometries(Intersectable... intersectables) {
+        for (Intersectable geometry : intersectables) {
+            _geometries.remove(geometry);
+        }
+    }
+
+    /**
+     * adds a light source to the scene
+     * @param lights
+     *              - The light source to add
+     */
+    public void addLights(LightSource lights) {
+        if(_lights == null){
+            _lights = new ArrayList<>();
+        }
+        _lights.add(lights);
+    }
+
+
 }

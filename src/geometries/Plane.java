@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Color;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
@@ -10,15 +11,19 @@ import static primitives.Util.*;
 
 /**
  * Plane class is the basic class representing a plane in a
- *  3D system
+ * 3D system
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
     Point3D _p;
     primitives.Vector _normal;
 
+
+    // ***************** Constructors ********************** //
+
     /**
      * Plane Constructor receiving three 3D Points
+     *
      * @param p1 first point
      * @param p2 second point
      * @param p3 third point
@@ -35,7 +40,8 @@ public class Plane implements Geometry {
 
     /**
      * Plane Constructor receiving a point and normal vector
-     * @param _p point
+     *
+     * @param _p      point
      * @param _normal vector
      */
     public Plane(Point3D _p, Vector _normal) {
@@ -43,13 +49,31 @@ public class Plane implements Geometry {
         this._normal = _normal;
     }
 
+    /**
+     * Plane Constructor receiving a point, normal vector and color
+     * @param emissionLight
+     * @param _p
+     * @param _normal
+     */
+    public Plane(Color emissionLight, Point3D _p, Vector _normal) {
+       this(_p,_normal);
+       setEmission(emissionLight);
+    }
+
+
+    // ***************** Getters/Setters ********************** //
+
     @Override
     public Vector getNormal(Point3D p) {
         return _normal;
     }
-    public Vector getNormal(){
+
+    public Vector getNormal() {
         return getNormal(null);
     }
+
+
+    // ***************** Administration  ******************** //
 
     @Override
     public String toString() {
@@ -59,26 +83,31 @@ public class Plane implements Geometry {
                 '}';
     }
 
+
+    // ***************** Operations ******************** //
+
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
-        Point3D p0 = ray.getPOO();
-        Vector v = ray.getDirection();
+    public List<GeoPoint> findIntersections(Ray ray) {
 
-        if (p0 == _p)
-            return List.of(p0);
+        Vector p0Q;
 
-        double nv = _normal.dotProduct(v);
-        if (isZero(nv))
+        try {
+            p0Q = _p.subtract(ray.getPoint());
+        } catch (IllegalArgumentException e) {
+            return null; // ray starts from point Q - no intersections
+        }
+
+
+        double nv = _normal.dotProduct(ray.getDirection());
+        if (isZero(nv)) //if the ray is parallel to the plane - no intersection
             return null;
 
-        double nQMinusP0 = _normal.dotProduct(_p.subtract(p0));
-        if (isZero(nQMinusP0))
+        double t = alignZero(_normal.dotProduct(p0Q) / nv);
+
+        if (t > 0) {
+            return List.of(new GeoPoint(this, ray.getTargetPoint(t)));
+        } else {
             return null;
-
-        double t = alignZero(nQMinusP0 / nv);
-        if (t > 0)
-            return List.of(p0.add(v.scale(t)));
-
-        return null;
+        }
     }
 }

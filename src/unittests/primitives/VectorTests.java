@@ -1,4 +1,4 @@
-package unittests;
+package unittests.primitives;
 
 import org.junit.Test;
 import primitives.*;

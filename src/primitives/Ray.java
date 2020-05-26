@@ -8,42 +8,49 @@ import static primitives.Util.*;
  */
 public class Ray {
     // Point of origin
-    private Point3D _POO;
+    private Point3D _point;
 
     // Ray direction
     private Vector _direction;
+
+    // ***************** Constructors ********************** //
+
+    /**
+     * Ray Constructor receiving origin point and direction vector
+     * @param startingPoint origin point
+     * @param direction direction vector
+     */
+    public Ray(Point3D startingPoint, Vector direction){
+        this._point = new Point3D(startingPoint);
+        this._direction = new Vector (direction.normalize());
+    }
 
     /**
      * Copy Constructor
      * @param ray
      */
     public Ray(Ray ray){
-        this._POO = ray.getPOO();
+        this._point = ray.getPoint();
         this._direction = ray.getDirection();
     }
 
-    /**
-     * Ray Constructor receiving origin point and direction vector
-     * @param poo origin point
-     * @param direction direction vector
-     */
-    public Ray(Point3D poo, Vector direction){
-        this._POO = new Point3D(poo._x._coord, poo._y._coord, poo._z._coord);
-        this._direction = new Vector (direction);
-        this._direction.normalize();
-    }
+
+    // ***************** Getters/Setters ********************** //
+
 
     /**
-     * vector direction getter
-     * @return _direction
+     * Getter
+     *
+     * @return Vector -the direction vector
      */
     public Vector  getDirection() { return new Vector(_direction); }
 
     /**
-     * origin point getter
-     * @return _POO
+     * Getter
+     *
+     * @return
      */
-    public Point3D getPOO() { return new Point3D(_POO._x._coord, _POO._y._coord, _POO._z._coord);}
+    public Point3D getPoint() { return new Point3D(_point);}
 
     /**
      * @author  Dan Zilberstein
@@ -51,7 +58,7 @@ public class Ray {
      * @return new Point3D
      */
     public Point3D getTargetPoint(double length) {
-        return isZero(length ) ? _POO : _POO.add(_direction.scale(length));
+        return isZero(length ) ? _point : _point.add(_direction.scale(length));
     }
 
 
@@ -66,13 +73,18 @@ public class Ray {
         if (!(obj instanceof Ray))
             return false;
         Ray other = (Ray) obj;
-        return _POO.equals(other._POO) && _direction.equals(other._direction);
+        return _point.equals(other._point) && _direction.equals(other._direction);
     }
 
+    /**
+     * toString of Ray, uses the Point3D toString and Vector toString
+     *
+     * @return - the details of ray in format: "Ray= Point:(x,y,z) Vector:(x,y,z)
+     */
     @Override
     public String toString() {
         return "Ray{" +
-                "_POO=" + _POO +
+                "_POO=" + _point +
                 ", _direction=" + _direction +
                 '}';
     }

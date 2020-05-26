@@ -1,4 +1,4 @@
-package unittests;
+package unittests.renderer;
 
 import org.junit.Test;
 import renderer.ImageWriter;

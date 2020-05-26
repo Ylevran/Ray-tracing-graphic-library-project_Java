@@ -1,4 +1,4 @@
-package unittests;
+package unittests.geometries;
 
 import geometries.Tube;
 import org.junit.Test;

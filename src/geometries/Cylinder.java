@@ -1,8 +1,12 @@
 package geometries;
 
+import primitives.Color;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static primitives.Util.*;
 
@@ -12,22 +16,70 @@ import static primitives.Util.*;
  */
 public class Cylinder extends Tube {
 
-    double _height;
+    private double _height;
+
+
+    // ***************** Constructors ********************** //
 
     /**
      * Cylinder Constructor receiving radius, axis and height
-     * @param _radius
-     * @param _axisRay
-     * @param _height
+     * @param radius
+     * @param axisRay
+     * @param height
      */
-    public Cylinder(double _radius, Ray _axisRay, double _height) {
-        super(_radius, _axisRay);
-        this._height = _height;
+    public Cylinder(double radius, Ray axisRay, double height) {
+        super(radius, axisRay);
+        this._height = height;
     }
 
+    /**
+     * Cylinder Constructor receiving radius, axis and height and color
+     * @param radius
+     * @param axisRay
+     * @param height
+     * @param emissionLight
+     */
+    public Cylinder(Color emissionLight, double radius, Ray axisRay, double height) {
+        this(radius, axisRay, height);
+        setEmission(emissionLight);
+    }
+
+
+    // ***************** Getters/Setters ********************** //
+
+
+    /**
+     * @return
+     */
+    public double getHeight(){
+        return _height;
+    }
+
+
+
+    // ***************** Operations ******************** //
+
+    @Override
+    public List<GeoPoint> findIntersections(Ray ray) {
+        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
+        List<GeoPoint> result = new LinkedList<>();
+        if (intersections != null) {
+            for (GeoPoint geoPoint : intersections) {
+                result.add(new GeoPoint(this, geoPoint.getPoint()));
+            }
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * @param point point to calculate the normal
+     * @return normal
+     * @author Dan Zilberstein
+     */
     @Override
     public Vector getNormal(Point3D point) {
-        Point3D o = _axisRay.getPOO();
+        Point3D o = _axisRay.getPoint();
         Vector v = _axisRay.getDirection();
 
         // projection of P-O on the ray:
@@ -44,14 +96,6 @@ public class Cylinder extends Tube {
 
         o = o.add(v.scale(t));
         return point.subtract(o).normalize();
-    }
-
-    /**
-     * height getter
-     * @return _height
-     */
-    public double get_height() {
-        return _height;
     }
 
     @Override
