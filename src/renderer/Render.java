@@ -110,16 +110,15 @@ public class Render {
             }
     }
 
-    /**
-     *
-     */
     public void writeToImage() {
         _imageWriter.writeToImage();
     }
 
     /**
+     * Calculate reflected color on point according to Phong model
+     *
      * @param gp
-     * @return
+     * @return color
      */
     private Color calcColor(GeoPoint gp)  {
 
