@@ -7,13 +7,14 @@ import primitives.Vector;
 
 /**
  * Class to manage a point lighting extends from Light and implement LightSource
- *
- *
  */
 public class PointLight extends Light implements LightSource {
 
     protected Point3D _position;
-    protected double _kC, _kL, _kQ;
+    protected double
+            _kC,
+            _kL,
+            _kQ;
 
     //***************** Constructors **********************//
 
@@ -21,14 +22,10 @@ public class PointLight extends Light implements LightSource {
      * Contractor to build a Point light
      *
      * @param _colorIntensity
-     * @param _position
-     *             - Position of the light
-     * @param _kC
-     *             - Coefficient of Quadratic attenuation of the light in the distance
-     * @param _kL
-     *             - Coefficient of linear weakening of the light in the distance
-     * @param _kQ
-     *             - Coefficient of exponential weakening of the light at a distance
+     * @param _position       - Position of the light
+     * @param _kC             - Coefficient of Quadratic attenuation of the light in the distance
+     * @param _kL             - Coefficient of linear weakening of the light in the distance
+     * @param _kQ             - Coefficient of exponential weakening of the light at a distance
      */
     public PointLight(Color _colorIntensity, Point3D _position, double _kC, double _kL, double _kQ) {
         super(_colorIntensity);
@@ -43,6 +40,7 @@ public class PointLight extends Light implements LightSource {
 
     /**
      * dummy overriding Light getIntensity()
+     *
      * @return
      */
     @Override
@@ -51,12 +49,13 @@ public class PointLight extends Light implements LightSource {
     }
 
     /**
+     * calculate the intensity of color of point on the geometry
      *
      * @param p the lighted point
-     * @return
+     * @return intensity of color af point p
      */
     @Override
-    public Color getIntensity(Point3D p){
+    public Color getIntensity(Point3D p) {
         double dsquared = p.distanceSquared(_position);
         double d = p.distance(_position);
 
@@ -65,15 +64,18 @@ public class PointLight extends Light implements LightSource {
 
     /**
      *
+     * calculates the direction of the light
+     * ray from the light source to the point
+     *
      * @param p the lighted point
-     * @return
+     * @return The direction of the light rays that hit the point
      */
     @Override
     public Vector getL(Point3D p) {
         if (p.equals(_position)) {
             return null;
         }
-        return p.subtract(_position).normalize();
+        return p.subtract(_position).normalized();
     }
 
 }
