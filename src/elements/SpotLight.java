@@ -13,7 +13,7 @@ import static primitives.Util.isZero;
 public class SpotLight extends PointLight {
 
     protected Vector _direction;
-    double _concentration;
+    //double _concentration;
 
     //***************** Constructors **********************//
 
@@ -33,19 +33,27 @@ public class SpotLight extends PointLight {
     }
 
 
-    public SpotLight(Color _colorIntensity, Point3D _position, Vector _direction, double _kC, double _kL, double _kQ, double _concentration) {
+    /*public SpotLight(Color _colorIntensity, Point3D _position, Vector _direction, double _kC, double _kL, double _kQ, double _concentration) {
         this(_colorIntensity,_position,_direction,_kC,_kL,_kQ);
         this._concentration = _concentration;
-    }
+    }*/
 
     // ***************** Getters/Setters ********************** //
 
 
+    /**
+     * @param p the lighted point
+     * @return
+     */
     @Override
     public Vector getL(Point3D p) {
         return _direction;
     }
 
+    /**
+     * @param p the lighted point
+     * @return
+     */
     @Override
     public Color getIntensity(Point3D p) {
 
@@ -63,13 +71,25 @@ public class SpotLight extends PointLight {
 
     }
 
+    /**
+     *
+     */
     public static class AdvancedSpotLight extends SpotLight {
 
+        double _concentration;
 
         public AdvancedSpotLight(Color _colorIntensity, Point3D _position, Vector _direction, double _kC, double _kL, double _kQ, double _concentration) {
-            super(_colorIntensity, _position, _direction, _kC, _kL, _kQ ,_concentration);
+            super(_colorIntensity, _position, _direction, _kC, _kL, _kQ );
+            this._concentration = _concentration;
         }
 
+        // ***************** Getters/Setters ********************** //
+
+
+        /**
+         * @param p
+         * @return
+         */
         @Override
         public Color getIntensity(Point3D p) {
             double dSquared = p.distanceSquared(_position);
@@ -85,6 +105,5 @@ public class SpotLight extends PointLight {
                     .reduce(_kC + _kL * d + _kQ * dSquared));
         }
     }
-
 
 }
