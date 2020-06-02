@@ -21,6 +21,7 @@ public class Color {
 
     public final static Color BLACK = new Color();
 
+
     /**
      * Default constructor - to generate Black Color (privately)
      */
@@ -128,7 +129,8 @@ public class Color {
      */
     public java.awt.Color getColor() {
         int r = (int)_r, g = (int)_g, b = (int)_b;
-        return new java.awt.Color(r > 255 ? 255 : r, g > 255 ? 255 : g, b > 255 ? 255 : b);
+        return new java.awt.Color(Math.min(r,255),Math.min(g,255),Math.min(b,255));
+        //return new java.awt.Color(r > 255 ? 255 : r, g > 255 ? 255 : g, b > 255 ? 255 : b);
     }
 
     /**

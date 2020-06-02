@@ -15,6 +15,7 @@ public class Triangle extends Polygon {
 
     // ***************** Constructors ********************** //
 
+
     /**
      * Triangle Constructor receiving three points
      *
@@ -27,21 +28,17 @@ public class Triangle extends Polygon {
     }
 
     /**
-     * Triangle Constructor receiving three points and color
-     *
      * @param emissionLight
      * @param p1
      * @param p2
      * @param p3
      */
-    public Triangle(Color emissionLight, Point3D p1, Point3D p2, Point3D p3 ) {
-        this(p1, p2, p3);
+    public Triangle(Color emissionLight, Point3D p1, Point3D p2, Point3D p3) {
+        super(p1, p2, p3);
         this._emission = emissionLight;
     }
 
     /**
-     * Triangle Constructor receiving three points, color and material
-     *
      * @param emissionLight
      * @param material
      * @param p1
@@ -49,15 +46,16 @@ public class Triangle extends Polygon {
      * @param p3
      */
     public Triangle(Color emissionLight, Material material, Point3D p1, Point3D p2, Point3D p3) {
-        this(emissionLight, p1, p2, p3);
+        super(emissionLight, p1, p2, p3);
         this._material = material;
     }
+
+
 
     // ***************** Operations ******************** //
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
-
         if (_plane.findIntersections(ray) == null) return null;
         List<GeoPoint> planeIntersections = _plane.findIntersections(ray);
 

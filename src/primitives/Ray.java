@@ -7,10 +7,10 @@ import static primitives.Util.*;
  * 3D system
  */
 public class Ray {
-    // Point of origin
+    // The point from which the ray starts.
     private Point3D _point;
 
-    // Ray direction
+    // The direction of the ray.
     private Vector _direction;
 
     // ***************** Constructors ********************** //

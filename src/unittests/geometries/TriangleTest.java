@@ -12,9 +12,7 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
 import static geometries.Intersectable.GeoPoint;
-
 /**
  * Testing Triangles
  * @author Yossef and Shmuel
