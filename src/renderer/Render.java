@@ -2,6 +2,7 @@ package renderer;
 
 import elements.Camera;
 import elements.LightSource;
+import elements.Material;
 import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 import primitives.*;

@@ -1,5 +1,6 @@
 package geometries;
 
+import elements.Material;
 import primitives.*;
 
 import java.util.LinkedList;

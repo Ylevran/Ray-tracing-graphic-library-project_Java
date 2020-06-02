@@ -1,6 +1,6 @@
 package geometries;
 
-import primitives.Material;
+import elements.Material;
 import primitives.*;
 
 

@@ -1,8 +1,8 @@
 package geometries;
 
+import elements.Material;
 import primitives.*;
 
-import java.util.Collections;
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -43,7 +43,7 @@ public class Tube extends RadialGeometry {
         this._emission = emissionLight;
     }
 
-    public Tube(Color emissionLight,Material _material, double _radius, Ray _axisRay) {
+    public Tube(Color emissionLight, Material _material, double _radius, Ray _axisRay) {
         this(emissionLight,_radius,_axisRay);
         this._material = _material;
 

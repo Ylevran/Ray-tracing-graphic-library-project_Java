@@ -2,6 +2,7 @@ package geometries;
 
 import java.util.List;
 
+import elements.Material;
 import primitives.*;
 
 import static primitives.Util.*;
@@ -92,7 +93,7 @@ public class Polygon extends Geometry {
         this._emission = emission;
     }
 
-    public Polygon(Color emission,Material _material, Point3D... vertices) {
+    public Polygon(Color emission, Material _material, Point3D... vertices) {
         this(emission,vertices);
         this._material = _material;
     }
