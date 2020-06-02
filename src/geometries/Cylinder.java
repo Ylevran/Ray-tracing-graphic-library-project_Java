@@ -20,45 +20,27 @@ public class Cylinder extends Tube {
 
     /**
      * Cylinder Constructor receiving radius, axis and height
-     * @param radius
-     * @param axisRay
-     * @param height
+     * @param _radius
+     * @param _axisRay
+     * @param _height
      */
-    public Cylinder(double radius, Ray axisRay, double height) {
-        super(radius, axisRay);
-        this._height = height;
+    public Cylinder(double _radius, Ray _axisRay, double _height) {
+        super(_radius, _axisRay);
+        this._height = _height;
     }
 
-    /**
-     * Cylinder Constructor receiving radius, axis, height and color
-     *
-     * @param radius
-     * @param axisRay
-     * @param height
-     * @param emissionLight
-     */
-    public Cylinder( Color emissionLight, double radius, Ray axisRay, double height) {
-        this(radius, axisRay, height);
-        this._emission = emissionLight;
+    public Cylinder(Color _emissionLight, double _radius, Ray _axisRay, double _height) {
+        this(_radius,_axisRay,_height);
+        this._emission = _emissionLight;
     }
 
-    /**
-     * Cylinder Constructor receiving radius, axis, height, color and material
-     *
-     * @param radius
-     * @param axisRay
-     * @param height
-     * @param emissionLight
-     * @param material
-     */
-    public Cylinder( Color emissionLight, Material material, double radius, Ray axisRay, double height) {
-        this(emissionLight, radius, axisRay, height);
-        this._material = material;
+    public Cylinder(Color _emissionLight, Material _material, double _radius, Ray _axisRay, double _height) {
+        this(_emissionLight, _radius, _axisRay, _height);
+        this._material = _material;
     }
 
 
-
-    // ***************** Getters/Setters ********************** //
+        // ***************** Getters/Setters ********************** //
 
 
     /**
@@ -66,23 +48,6 @@ public class Cylinder extends Tube {
      */
     public double getHeight(){
         return _height;
-    }
-
-
-
-    // ***************** Operations ******************** //
-
-    @Override
-    public List<GeoPoint> findIntersections(Ray ray) {
-        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
-        List<GeoPoint> result = new LinkedList<>();
-        if (intersections != null) {
-            for (GeoPoint geoPoint : intersections) {
-                result.add(new GeoPoint(this, geoPoint.getPoint()));
-            }
-            return result;
-        }
-        return null;
     }
 
     /**
@@ -110,6 +75,24 @@ public class Cylinder extends Tube {
         o = o.add(v.scale(t));
         return point.subtract(o).normalize();
     }
+
+
+    // ***************** Operations ******************** //
+
+    @Override
+    public List<GeoPoint> findIntersections(Ray ray) {
+        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
+        List<GeoPoint> result = new LinkedList<>();
+        if (intersections != null) {
+            for (GeoPoint geoPoint : intersections) {
+                result.add(new GeoPoint(this, geoPoint.getPoint()));
+            }
+            return result;
+        }
+        return null;
+    }
+
+
 
     @Override
     public String toString() {

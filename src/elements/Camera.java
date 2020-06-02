@@ -97,14 +97,14 @@ public class Camera {
     /**
      * @return Point3D (Position the center of the camera)
      */
-    public Point3D get_p0() {
+    public Point3D getP0() {
         return new Point3D(_p0);
     }
 
     /**
      * @return the vector _vTo
      */
-    public Vector get_vTo() {
+    public Vector getVTo() {
         return new Vector(_vTo);
     }
 
@@ -113,7 +113,7 @@ public class Camera {
      *
      * @return the vector _vUp
      */
-    public Vector get_vUp() {
+    public Vector getVUp() {
         return new Vector(_vUp);
     }
 
@@ -122,7 +122,7 @@ public class Camera {
      *
      * @return the vector _vRight
      */
-    public Vector get_vRight() {
+    public Vector getVRight() {
         return new Vector(_vRight);
     }
 

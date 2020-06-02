@@ -13,6 +13,7 @@ import static primitives.Util.isZero;
  */
 public class Tube extends RadialGeometry {
 
+    //TODO Test
     protected final Ray _axisRay;
 
 
@@ -31,28 +32,21 @@ public class Tube extends RadialGeometry {
     }
 
     /**
-     * Tube Constructor receiving radius, axis Ray and color
+     * Tube Constructor receiving radius and axis Ray and color
      *
      * @param emissionLight
      * @param radius
      * @param axisRay
      */
-    public Tube( Color emissionLight, double radius, Ray axisRay) {
+    public Tube(Color emissionLight, double radius, Ray axisRay) {
         this(radius, axisRay);
         this._emission = emissionLight;
     }
 
-    /**
-     * Tube Constructor receiving radius, axis Ray, color and material
-     *
-     * @param radius
-     * @param axisRay
-     * @param emissionLight
-     * @param material
-     */
-    public Tube(Color emissionLight, Material material, double radius, Ray axisRay ) {
-        this(emissionLight, radius, axisRay);
-        this._material = material;
+    public Tube(Color emissionLight,Material _material, double _radius, Ray _axisRay) {
+        this(emissionLight,_radius,_axisRay);
+        this._material = _material;
+
     }
 
 
@@ -102,7 +96,7 @@ public class Tube extends RadialGeometry {
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
 
-      /*  //Given ray (A + ta)
+        //Given ray (A + ta)
         Point3D pointA = new Point3D(ray.getPoint());
         Vector vectorA = new Vector(ray.getDirection());
 
@@ -110,49 +104,62 @@ public class Tube extends RadialGeometry {
         Point3D pointB = _axisRay.getPoint();
         Vector vectorB = _axisRay.getDirection();
 
+        //if  vectorA  and pointA are parallel to tube (zero intersection points)
+        if (Util.isOne(Math.abs(vectorA.dotProduct(vectorB))))
+            return null;
+
+        if(pointA.equals(pointB))
+            pointB =_axisRay.getTargetPoint(-1);
+
+        Vector pointAB = new Vector(pointA.subtract(pointB));
+
         double v1 = vectorA.dotProduct(vectorB);
-        //if is parallel to tube
-        if (Util.isOne(Math.abs(vectorA.dotProduct(vectorB)))) {
-            return Collections.emptyList();
+        double v2 = pointAB.dotProduct(vectorB);
+
+        double a, b, c;
+
+        Vector vectorC;
+        Vector vectorD = null;
+
+        if(isZero(v1))
+            vectorC = vectorA;
+        else
+            vectorC = vectorA.subtract(vectorB.scale(v1));
+
+        if(isZero(v2))
+            vectorD = pointAB;
+        else if(!pointAB.equals(vectorB.scale(v2)))
+            vectorD =pointAB.subtract(vectorB.scale(v2));
+
+        if(isZero(v2) || !pointAB.equals(vectorB.scale(v2))) {
+            b = 2 * vectorC.dotProduct(vectorD);
+            c = vectorD.dotProduct(vectorD) - _radius * _radius;
+        } else {
+            b = 0;
+            c = -_radius * _radius;
         }
 
-        double bb = 1; // it is a unit vector therefore it's squared size is 1
-        double aa = 1;
-        double bc, ac;
-        try {
-            //Vector AB
-            Vector c = pointB.subtract(pointA);
-            //dot-product calc
-            bc = vectorB.dotProduct(c);
-            ac = vectorA.dotProduct(c);
+        a = vectorC.dotProduct(vectorC);
+        double desc = b*b - 4*a*c;
 
-            //The closest point on
-            double t1 = (-(vectorA.dotProduct(vectorB)) * bc + ac * 1) / ( 1 - ab * ab);
-            try {
-                d = pointA.add(vectorA.scale(t1));
-            } catch (Exception ex) {
-                d = pointA;
-            }
+        //if there is no solution
+        if(desc < 0) return  null;
 
-            //The closest point on (B + t2b)
-            double t2 = (ab * ac - bc * aa) / (*//*aa * bb*//* 1 - ab * ab);
+        //if there is one solution
+        if(isZero(desc)) return null;
 
-            try {
-                e = pointB.add(vectorB.scale(t2));
-            } catch (Exception ex) {
-                e = pointB;
-            }
+        double direction1 = (-b+Math.sqrt(desc))/(2*a);
+        double direction2 = (-b-Math.sqrt(desc))/(2*a);
 
-            //distance between two rays
-            dis = d.distance(e);
+        if(direction1 <=0 &&  direction2 <=0)
+            return null;
+        else if(direction1 > 0 && direction2 > 0)
+            return List.of(
+                    new GeoPoint(this,ray.getTargetPoint(direction1)),
+                    new GeoPoint(this,ray.getTargetPoint(direction2)));
+        else return List.of(
+                new GeoPoint(this,ray.getTargetPoint(direction1)));
 
-        } catch (Exception ex) {
-            //If A and B are the same
-            d = ray.getPoint3D();
-            dis = 0;
-        }*/
-
-
-        return null;
     }
+
 }

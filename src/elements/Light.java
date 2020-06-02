@@ -18,13 +18,15 @@ public abstract class Light {
 
     /**
      * Initialize Lights color intensity
-     * @param c
+     * @param _intensity
      */
-    public Light(Color c) {
-        this._intensity = c;
+    public Light(Color _intensity) {
+        this._intensity = _intensity;
     }
 
-
+    /*public Light() {
+        this._intensity = Color.BLACK;
+    }*/
 
     // ***************** Getters/Setters ********************** //
 
