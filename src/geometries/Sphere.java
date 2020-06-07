@@ -100,7 +100,8 @@ public class Sphere extends RadialGeometry {
         }
         if (t1 > 0)
             return List.of(new GeoPoint(this,(ray.getTargetPoint(t1))));
-        else
+        else if (t2 > 0)
             return List.of(new GeoPoint(this,(ray.getTargetPoint(t2))));
+        return null;
     }
 }
