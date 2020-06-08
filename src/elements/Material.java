@@ -12,46 +12,51 @@ public class Material {
     private final double _kS;
     private final int _nShininess;
 
+    private final double _kT;
+    private final double _kR;
+
+
     public final static Material DEFAULT = new Material(0d,0d,0);
 
     //***************** Constructors **********************//
 
     /**
+     * Basic Constructor
+     *
      * @param _kD
      * @param _kS
      * @param _nShininess
      *                  - Determines the level of shining of the material
      */
     public Material(double _kD, double _kS, int _nShininess) {
+        this(_kD, _kS, _nShininess, 0, 0);
+    }
+
+    /**
+     * Constructor with transparency and reflection parameters
+     *
+     * @param _kD
+     * @param _kS
+     * @param _nShininess
+     * @param _kT
+     * @param _kR
+     */
+    public Material(double _kD, double _kS, int _nShininess, double _kT, double _kR){
         this._kD = _kD;
         this._kS = _kS;
         this._nShininess = _nShininess;
+        this._kT = _kT;
+        this._kR = _kR;
+
     }
-
-
-/*
-    */
-/**
-     * Copy constructor
-     *
-     * @param material
-     *//*
-
-    public Material(Material material){
-        this(material._kD, material._kS, material._nShininess);
-    }
-
-*/
-
-
 
 
     // ***************** Getters/Setters ********************** //
 
     /**
      * Getter
-     *
-     * @return
+     * Gets the degree of diffusion of the material
+     * @return diffusion exponent
      */
     public double getKd() {
         return _kD;
@@ -59,13 +64,12 @@ public class Material {
 
     /**
      * Getter
-     *
-     * @return
+     *Gets the specular degree of the material
+     * @return specualr exponent
      */
     public double getKs() {
         return _kS;
     }
-
 
     /**
      * Getter
@@ -75,5 +79,19 @@ public class Material {
     public int getNShininess() {
         return _nShininess;
     }
+
+    /**
+     * Getter
+     * Gets the degree of transparency of the material
+     * @return transparency exponent
+     */
+    public double getKt() {return _kT;}
+
+    /**
+     * Getter
+     * Gets the degree of reflection of the material
+     * @return reflection exponent
+     */
+    public double getKr() {return _kR;}
 
 }

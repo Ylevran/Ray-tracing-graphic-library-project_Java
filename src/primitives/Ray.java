@@ -1,5 +1,7 @@
 package primitives;
 
+import java.awt.*;
+
 import static primitives.Util.*;
 
 /**
@@ -13,6 +15,8 @@ public class Ray {
     // The direction of the ray.
     private Vector _direction;
 
+    private static final double DELTA = 0.1;
+
     // ***************** Constructors ********************** //
 
     /**
@@ -23,6 +27,16 @@ public class Ray {
     public Ray(Point3D startingPoint, Vector direction){
         this._point = new Point3D(startingPoint);
         this._direction = new Vector (direction.normalize());
+    }
+
+    public Ray(Point3D point, Vector direction, Vector normal) {
+        // head + normal.scale(+-DELTA)
+        _direction = new Vector(direction).normalized();
+
+        double nv = normal.dotProduct(direction);
+
+        Vector normalDelta = normal.scale((nv > 0 ? DELTA : -DELTA));
+        _point = point.add(normalDelta);
     }
 
     /**
