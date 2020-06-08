@@ -167,12 +167,12 @@ public class Render {
                 double nv = alignZero(n.dotProduct(v));
 
                 if (sign(nl) == sign(nv)) { // Check that 𝒔𝒊𝒈𝒏(𝒍∙𝒏) == 𝒔𝒊𝒈𝒏(𝒗∙𝒏) according to Phong reflectance model
-                    if (unshaded(lightSource, l, n, gp)) {
-                        Color lightIntensity = lightSource.getIntensity(gp.getPoint());
+                    double ktr = transparency(lightSource, l, n, gp);
+                    if (ktr * k > MIN_CALC_COLOR_K) {
+                        Color lightIntensity = lightSource.getIntensity(gp.getPoint()).scale(ktr);
                         color = color.add(
                                 calcDiffusive(kd, nl, lightIntensity),
-                                calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity)
-                        );
+                                calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity));
                     }
                 }
             }
@@ -290,34 +290,36 @@ public class Render {
     }
 
     /**
-     * Checks weather the point is shaded or not
+     * Returns transparency factor on specific point
      *
-     * @param light light source
+     * @param ls light source
      * @param l
      * @param n
      * @param geoPoint
-     * @return shader or unshaded
+     * @return transparency factor
      */
-    private boolean unshaded(LightSource light ,Vector l, Vector n, GeoPoint geoPoint){
+    private double transparency(LightSource ls, Vector l, Vector n, GeoPoint geoPoint){
         Vector lightDirection = l.scale(-1); // from point to light source
+
         Ray lightRay = new Ray(geoPoint.getPoint(), lightDirection, n);
-        Point3D pointGeo = geoPoint.getPoint();
 
         List<GeoPoint> intersections = _scene.getGeometries().findIntersections(lightRay);
         if (intersections == null) {
-            return true;
+            return 1.0;
         }
 
-        double lightDistance = light.getDistance(geoPoint.getPoint());
+        double lightDistance = ls.getDistance(geoPoint.getPoint());
+        double ktr = 1.0;
         for (GeoPoint gp : intersections) {
-            if (alignZero(gp.getPoint().distance(geoPoint.getPoint()) - lightDistance) <= 0
-                    && gp.getGeometry().getMaterial().getKt() == 0
-            ) {
-                return false;
+            if (alignZero(gp.getPoint().distance(geoPoint.getPoint()) - lightDistance) <= 0){
+                ktr *= gp.getGeometry().getMaterial().getKt();
+                if (ktr < MIN_CALC_COLOR_K)
+                    return 0.0;
             }
         }
-        return true;
+        return ktr;
     }
+
 
     /**
      * Returns refracted ray with delta moving
@@ -374,5 +376,7 @@ public class Render {
         }
         return closestPoint;
     }
+
+
 
 }
