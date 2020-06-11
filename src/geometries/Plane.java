@@ -28,9 +28,11 @@ public class Plane extends Geometry {
      */
     public Plane(Point3D p1, Point3D p2, Point3D p3) {
         _p = new Point3D(p1.get_x(), p1.get_y(), p1.get_z());
+
         Vector U = new Vector(p1, p2);
         Vector V = new Vector(p1, p3);
-        Vector N = U.crossProduct(V);
+        Vector N = new Vector(U.crossProduct(V));
+
         N.normalize();
         _normal = N;
 //        _normal = N.scale(-1);

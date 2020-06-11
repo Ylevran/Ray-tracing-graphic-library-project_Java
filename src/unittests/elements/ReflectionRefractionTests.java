@@ -53,18 +53,35 @@ public class ReflectionRefractionTests {
 	@Test
 	public void twoSpheresOnMirrors() {
 		Scene scene = new Scene("Test scene");
-		scene.setCamera(new Camera(new Point3D(0, 0, -10000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
+		scene.setCamera(new Camera(
+				new Point3D(0, 0, -10000),
+				new Vector(0, 0, 1),
+				new Vector(0, -1, 0)));
 		scene.setDistance(10000);
 		scene.setBackground(Color.BLACK);
 		scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
 
 		scene.addGeometries(
-				new Sphere(new Color(0, 0, 100), new Material(0.25, 0.25, 20, 0.5, 0), 400, new Point3D(-950, 900, 1000)),
-				new Sphere(new Color(100, 20, 20), new Material(0.25, 0.25, 20), 200, new Point3D(-950, 900, 1000)),
-				new Triangle(new Color(20, 20, 20), new Material(0, 0, 0, 0, 1), new Point3D(1500, 1500, 1500),
-						new Point3D(-1500, -1500, 1500), new Point3D(670, -670, -3000)),
-				new Triangle(new Color(20, 20, 20), new Material(0, 0, 0, 0, 0.5), new Point3D(1500, 1500, 1500),
-						new Point3D(-1500, -1500, 1500), new Point3D(-1500, 1500, 2000)));
+				new Sphere(
+						new Color(0, 0, 100),
+						new Material(0.25, 0.25, 20, 0.5, 0), 400,
+						new Point3D(-950, 900, 1000)),
+				new Sphere(
+						new Color(100, 20, 20),
+						new Material(0.25, 0.25, 20), 200,
+						new Point3D(-950, 900, 1000)),
+				new Triangle(
+						new Color(20, 20, 20),
+						new Material(0, 0, 0, 0, 1),
+						new Point3D(1500, 1500, 1500),
+						new Point3D(-1500, -1500, 1500),
+						new Point3D(670, -670, -3000)),
+				new Triangle(
+						new Color(20, 20, 20),
+						new Material(0, 0, 0, 0, 0.5),
+						new Point3D(1500, 1500, 1500),
+						new Point3D(-1500, -1500, 1500),
+						new Point3D(-1500, 1500, 2000)));
 
 		scene.addLights(new SpotLight(new Color(1020, 400, 400),  new Point3D(-750, 750, 150), 
 				   new Vector(-1, 1, 4), 1, 0.00001, 0.000005));
