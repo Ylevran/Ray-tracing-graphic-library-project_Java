@@ -86,7 +86,7 @@ public class Render {
         for (int row = 0; row < nY; ++row)
             for (int column = 0; column < nX; ++column) {
                Ray ray = camera.constructRayThroughPixel(nX,nY,column,row,distance,width,height);
-               List<GeoPoint> intersectionPoints = geometries.findIntersections(ray);
+               //List<GeoPoint> intersectionPoints = geometries.findIntersections(ray);
                GeoPoint closestPoint = findClosestIntersection(ray);
                _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
 
@@ -224,9 +224,7 @@ public class Render {
      * @return intensity of diffusive color (color)
      */
     private Color calcDiffusive(double kd, double nl, Color lightIntensity) {
-        if (nl < 0) {
-            nl = -nl;
-        }
+        if (nl < 0) nl = -nl;
         return lightIntensity.scale(nl * kd);
     }
 
@@ -255,9 +253,9 @@ public class Render {
 
         Vector R = l.add(n.scale(-2 * nl)); // nl must not be zero!
         double minusVR = -alignZero(R.dotProduct(v));
-        if (minusVR <= 0) {
+        if (minusVR <= 0)
             return Color.BLACK; // view from direction opposite to r vector
-        }
+
         return lightIntensity.scale(ks * Math.pow(minusVR, p));
     }
 
@@ -277,8 +275,7 @@ public class Render {
         Point3D p0 = this._scene.getCamera().getP0();
 
         for (GeoPoint geo : intersectionPoints) {
-            Point3D pt = geo.getPoint();
-            double distance = p0.distance(pt);
+            double distance = p0.distance(geo.getPoint());
 
             if (distance < minDistance) {
                 minDistance = distance;
@@ -304,9 +301,8 @@ public class Render {
         Ray lightRay = new Ray(geoPoint.getPoint(), lightDirection, n);
 
         List<GeoPoint> intersections = _scene.getGeometries().findIntersections(lightRay);
-        if (intersections == null) {
+        if (intersections == null)
             return 1.0;
-        }
 
         double lightDistance = ls.getDistance(geoPoint.getPoint());
         double ktr = 1.0;
@@ -344,9 +340,10 @@ public class Render {
     private Ray constructReflectedRay(Point3D pointGeo, Ray inRay, Vector n){
         Vector v = inRay.getDirection();
         double vn = v.dotProduct(n);
-        if (vn == 0) {
+
+        if (vn == 0)
             return null;
-        }
+
         Vector r = v.subtract(n.scale(2 * vn));
         return new Ray(pointGeo, r , n);
     }
@@ -369,6 +366,7 @@ public class Render {
 
         for (GeoPoint gp : intersections){
             double distance = ray_p0.distance(gp.getPoint());
+
             if (distance < closestDistance){
                 closestPoint = gp;
                 closestDistance = distance;

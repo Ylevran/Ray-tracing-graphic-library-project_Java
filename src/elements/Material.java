@@ -12,8 +12,8 @@ public class Material {
     private final double _kS;
     private final int _nShininess;
 
-    private final double _kT;
-    private final double _kR;
+    private final double _kT; // k transparency
+    private final double _kR; // k reflection
 
 
     public final static Material DEFAULT = new Material(0d,0d,0);
@@ -55,6 +55,7 @@ public class Material {
 
     /**
      * Getter
+     *
      * Gets the degree of diffusion of the material
      * @return diffusion exponent
      */
@@ -64,7 +65,8 @@ public class Material {
 
     /**
      * Getter
-     *Gets the specular degree of the material
+     *
+     * Gets the specular degree of the material
      * @return specualr exponent
      */
     public double getKs() {
@@ -73,6 +75,7 @@ public class Material {
 
     /**
      * Getter
+     *
      * Gets the degree of shining of the material
      * @return Exponent of shininess
      */
@@ -82,6 +85,7 @@ public class Material {
 
     /**
      * Getter
+     *
      * Gets the degree of transparency of the material
      * @return transparency exponent
      */
@@ -89,6 +93,7 @@ public class Material {
 
     /**
      * Getter
+     *
      * Gets the degree of reflection of the material
      * @return reflection exponent
      */

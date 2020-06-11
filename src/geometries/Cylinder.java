@@ -9,8 +9,8 @@ import java.util.List;
 import static primitives.Util.*;
 
 /**
- * Cylinder class is the basic class representing a triangle in a
- *  3D system
+ * Cylinder class is the basic class representing a cylinder in a
+ * 3D system
  */
 public class Cylinder extends Tube {
 
@@ -41,7 +41,7 @@ public class Cylinder extends Tube {
     }
 
 
-        // ***************** Getters/Setters ********************** //
+    // ***************** Getters/Setters ********************** //
 
 
     /**
@@ -56,6 +56,9 @@ public class Cylinder extends Tube {
      * @return normal
      * @author Dan Zilberstein
      */
+
+    // ***************** Operations ******************** //
+
     @Override
     public Vector getNormal(Point3D point) {
         Point3D o = _axisRay.getPoint();
@@ -78,7 +81,7 @@ public class Cylinder extends Tube {
     }
 
 
-    // ***************** Operations ******************** //
+
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
@@ -96,7 +99,7 @@ public class Cylinder extends Tube {
 
 
     @Override
-    public String toString() {
+        public String toString() {
         return "Cylinder{" +
                 "_height=" + _height +
                 ", _axisRay=" + _axisRay.toString() +
