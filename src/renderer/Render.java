@@ -119,10 +119,7 @@ public class Render {
                 GeoPoint closestPoint = findClosestIntersection(ray);
 
                 List<Ray> rayList = camera.constructBeamThroughPixel(nX, nY, column, row, distance, width, height);
-
-                _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
-
-
+                _imageWriter.writePixel(column,row,closestPoint == null ? background : averageColor(rayList).getColor());
 
             }
     }
@@ -389,9 +386,14 @@ public class Render {
      * @return
      */
     private Color averageColor(List<Ray> rayBeam){
-        java.awt.color background = _scene.getBackground().getColor();
+        java.awt.Color background = _scene.getBackground().getColor();
+        Color color = new Color(0,0,0);
+        for(Ray ray : rayBeam){
+            color = findClosestIntersection(ray) == null ? color.add(_scene.getBackground())
+                    : color.add(calcColor(findClosestIntersection(ray),ray));
+        }
 
-        return Color.BLACK;
+        return color.reduce(rayBeam.size());
     }
 
 }
