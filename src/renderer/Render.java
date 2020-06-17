@@ -27,11 +27,6 @@ public class Render {
     private ImageWriter _imageWriter;
     private Scene _scene;
 
-    /**
-     * static num for head shadow ray moving
-     */
-    private static final double DELTA = 0.1;
-
     private static final int MAX_CALC_COLOR_LEVEL = 10;
     private static final double MIN_CALC_COLOR_K = 0.001;
 
@@ -39,15 +34,21 @@ public class Render {
 
     // ***************** Constructors ********************** //
 
+    /**
+     * @param _scene
+     */
     public Render(Scene _scene) {
         this._scene = _scene;
     }
 
+    /**
+     * @param _imageWriter
+     * @param _scene
+     */
     public Render(ImageWriter _imageWriter, Scene _scene) {
         this._imageWriter = _imageWriter;
         this._scene = _scene;
     }
-
 
     // ***************** Getters/Setters ********************** //
 
@@ -85,10 +86,9 @@ public class Render {
 
         for (int row = 0; row < nY; ++row)
             for (int column = 0; column < nX; ++column) {
-               Ray ray = camera.constructRayThroughPixel(nX,nY,column,row,distance,width,height);
-               //List<GeoPoint> intersectionPoints = geometries.findIntersections(ray);
-               GeoPoint closestPoint = findClosestIntersection(ray);
-               _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
+                Ray ray = camera.constructRayThroughPixel(nX,nY,column,row,distance,width,height);
+                GeoPoint closestPoint = findClosestIntersection(ray);
+                _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
 
             }
     }
@@ -326,7 +326,7 @@ public class Render {
      * @return refracted ray
      */
     private Ray constructRefractedRay(Point3D pointGeo, Ray inRay, Vector n ){
-       return new Ray(pointGeo, inRay.getDirection(), n);
+        return new Ray(pointGeo, inRay.getDirection(), n);
     }
 
     /**
