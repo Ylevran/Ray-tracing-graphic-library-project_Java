@@ -91,8 +91,18 @@ public class Camera {
     }
 
 
-
-
+    /**
+     * Construct ray through pixel for super sampling method (realization by Jitter)
+     *
+     * @param nX
+     * @param nY
+     * @param j
+     * @param i
+     * @param screenDistance
+     * @param screenWidth
+     * @param screenHeight
+     * @return
+     */
     public List<Ray> constructBeamThroughPixel(int nX, int nY, int j, int i, double screenDistance, double screenWidth,
                                                double screenHeight) {
         List<Ray> beam = new ArrayList<Ray>();
@@ -208,4 +218,3 @@ public class Camera {
 
 
 }
-

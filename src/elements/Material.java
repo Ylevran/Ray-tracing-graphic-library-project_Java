@@ -1,5 +1,11 @@
 package elements;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  *
  * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
@@ -15,6 +21,7 @@ public class Material {
     private final double _kT; // k transparency
     private final double _kR; // k reflection
 
+    //BufferedImage _image;
 
     public final static Material DEFAULT = new Material(0d,0d,0);
 
@@ -50,6 +57,16 @@ public class Material {
 
     }
 
+   /* public Material(double _kD, double _kS, int _nShininess, double _kT, double _kR, String _image){
+        this(_kD,_kS,_nShininess,_kT,_kR);
+        if(_image != null){
+            try {
+                this._image = ImageIO.read(new File(_image));
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }*/
 
     // ***************** Getters/Setters ********************** //
 
