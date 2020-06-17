@@ -93,6 +93,41 @@ public class Render {
             }
     }
 
+    /**
+     *  Throws rays through the all pixels and for each ray - if it's got
+     *  intersection points with the shapes of the scene - paints the closest point
+     */
+    public void renderImageAdvanced() {
+        Camera camera = _scene.getCamera();
+        Intersectable geometries = _scene.getGeometries();
+        java.awt.Color background = _scene.getBackground().getColor();
+
+        //Nx and Ny are the number of pixels in the rows and columns of the view plane
+        int nX = _imageWriter.getNx();
+        int nY = _imageWriter.getNy();
+
+        //width and height are the width and height of the image.
+        double width = _imageWriter.getWidth();
+        double height = _imageWriter.getHeight();
+
+        double distance = _scene.getDistance();
+
+
+        for (int row = 0; row < nY; ++row)
+            for (int column = 0; column < nX; ++column) {
+                Ray ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
+                GeoPoint closestPoint = findClosestIntersection(ray);
+
+                List<Ray> rayList = camera.constructBeamThroughPixel(nX, nY, column, row, distance, width, height);
+
+                _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
+
+
+
+            }
+    }
+
+
 
     /**
      *  Prints grid for the background of the image for test
@@ -260,33 +295,6 @@ public class Render {
     }
 
     /**
-     *  Finds the closest point to the camera from all intersection points
-     *
-     * @param intersectionPoints
-     * @return  - The closest point to the camera
-     *
-     */
-    private GeoPoint getClosestPoint(List<GeoPoint> intersectionPoints) {
-
-        // initialization
-        GeoPoint result = null;
-        double minDistance = Double.MAX_VALUE;
-
-        Point3D p0 = this._scene.getCamera().getP0();
-
-        for (GeoPoint geo : intersectionPoints) {
-            double distance = p0.distance(geo.getPoint());
-
-            if (distance < minDistance) {
-                minDistance = distance;
-                result = geo;
-            }
-        }
-        return result;
-
-    }
-
-    /**
      * Returns transparency factor on specific point
      *
      * @param ls light source
@@ -315,7 +323,6 @@ public class Render {
         }
         return ktr;
     }
-
 
     /**
      * Returns refracted ray with delta moving
@@ -375,6 +382,16 @@ public class Render {
         return closestPoint;
     }
 
+    /**
+     * Calculate the average of a color in a pixel
+     *
+     * @param rayBeam
+     * @return
+     */
+    private Color averageColor(List<Ray> rayBeam){
+        java.awt.color background = _scene.getBackground().getColor();
 
+        return Color.BLACK;
+    }
 
 }
