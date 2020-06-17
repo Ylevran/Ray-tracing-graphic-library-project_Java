@@ -259,33 +259,6 @@ public class Render {
     }
 
     /**
-     *  Finds the closest point to the camera from all intersection points
-     *
-     * @param intersectionPoints
-     * @return  - The closest point to the camera
-     *
-     */
-    private GeoPoint getClosestPoint(List<GeoPoint> intersectionPoints) {
-
-        // initialization
-        GeoPoint result = null;
-        double minDistance = Double.MAX_VALUE;
-
-        Point3D p0 = this._scene.getCamera().getP0();
-
-        for (GeoPoint geo : intersectionPoints) {
-            double distance = p0.distance(geo.getPoint());
-
-            if (distance < minDistance) {
-                minDistance = distance;
-                result = geo;
-            }
-        }
-        return result;
-
-    }
-
-    /**
      * Returns transparency factor on specific point
      *
      * @param ls light source
