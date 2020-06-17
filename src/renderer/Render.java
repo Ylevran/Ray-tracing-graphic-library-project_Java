@@ -86,7 +86,6 @@ public class Render {
         for (int row = 0; row < nY; ++row)
             for (int column = 0; column < nX; ++column) {
                Ray ray = camera.constructRayThroughPixel(nX,nY,column,row,distance,width,height);
-               //List<GeoPoint> intersectionPoints = geometries.findIntersections(ray);
                GeoPoint closestPoint = findClosestIntersection(ray);
                _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
 
