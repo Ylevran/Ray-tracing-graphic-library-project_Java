@@ -83,7 +83,7 @@ public class ImprovementsTests {
                         new Point3D(-1500, 1500, 2000)));
 
         scene.addLights(new SpotLight(new Color(1020, 400, 400), new Point3D(-750, 750, 150),
-                new Vector(-1, 1, 4), 1, 0.00001, 0.000005));
+                new Vector(-1, 1, 4), 1, 0.00001, 0.000005, 10));
 
         ImageWriter imageWriter = new ImageWriter("twoSpheresMirroredAdvanced", 2500, 2500, 500, 500);
         Render render = new Render(imageWriter, scene);
