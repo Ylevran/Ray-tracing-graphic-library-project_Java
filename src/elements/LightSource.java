@@ -39,6 +39,7 @@ public interface LightSource {
      * @param point
      * @return distance
      */
-    double getDistance(Point3D point);
+    public double getDistance(Point3D point);
+
 
 }

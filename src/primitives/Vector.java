@@ -179,4 +179,19 @@ public class Vector {
                 "head = " + _head.toString() +
                 '}';
     }
+
+    /**
+     * Return orthogonal vector to given Vector
+     * @return orthogonal vector
+     */
+    public Vector findOrthogonal(){
+        if (this._head.get_y()._coord == 0 &&  this._head.get_z()._coord == 0){
+            if (this._head.get_x()._coord == 0)
+                throw new IllegalArgumentException("Zero Vector");
+
+            else
+                return this.crossProduct(new Vector(0,1,0));
+        }
+        return this.crossProduct(new Vector(1,0,0));
+    }
 }

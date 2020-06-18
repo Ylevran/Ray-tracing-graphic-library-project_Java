@@ -3,6 +3,7 @@ package geometries;
 import elements.Material;
 import primitives.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static primitives.Util.*;
@@ -35,7 +36,6 @@ public class Plane extends Geometry {
 
         N.normalize();
         _normal = N;
-//        _normal = N.scale(-1);
     }
 
     /**
@@ -65,7 +65,7 @@ public class Plane extends Geometry {
         this._material = _material;
     }
 
-        // ***************** Getters/Setters ********************** //
+    // ***************** Getters/Setters ********************** //
 
     @Override
     public Vector getNormal(Point3D p) {
@@ -113,5 +113,19 @@ public class Plane extends Geometry {
         } else {
             return null;
         }
+    }
+
+
+    /**
+     * Return list of two orthogonals to normal and normalised vectors in the plane
+     * @return list
+     */
+    public List<Vector> findOrthoBasis(){
+        List<Vector> basis = new ArrayList<Vector>();
+        Vector ortho1 = this._normal.findOrthogonal();
+        basis.add(ortho1.normalize());
+        Vector ortho2 = this._normal.crossProduct(ortho1);
+        basis.add(ortho2.normalize());
+        return basis;
     }
 }

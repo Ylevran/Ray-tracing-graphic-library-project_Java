@@ -16,10 +16,31 @@ public class PointLight extends Light implements LightSource {
             _kL,
             _kQ;
 
+    protected double _radius;
+
     //***************** Constructors **********************//
 
     /**
-     * Contractor to build a Point light
+     * Constructor to build a Point light with radius
+     *
+     * @param _colorIntensity
+     * @param _position       - Position of the light
+     * @param _kC             - Coefficient of Quadratic attenuation of the light in the distance
+     * @param _kL             - Coefficient of linear weakening of the light in the distance
+     * @param _kQ             - Coefficient of exponential weakening of the light at a distance
+     * @param radius          - radius of the point light
+     */
+    public PointLight(Color _colorIntensity, Point3D _position, double _kC, double _kL, double _kQ, double radius) {
+        super(_colorIntensity);
+        this._position = new Point3D(_position);
+        this._kC = _kC;
+        this._kL = _kL;
+        this._kQ = _kQ;
+        this._radius = radius;
+    }
+
+    /**
+     * Constructor to build a Point light
      *
      * @param _colorIntensity
      * @param _position       - Position of the light
@@ -28,15 +49,26 @@ public class PointLight extends Light implements LightSource {
      * @param _kQ             - Coefficient of exponential weakening of the light at a distance
      */
     public PointLight(Color _colorIntensity, Point3D _position, double _kC, double _kL, double _kQ) {
-        super(_colorIntensity);
-        this._position = new Point3D(_position);
-        this._kC = _kC;
-        this._kL = _kL;
-        this._kQ = _kQ;
+        this(_colorIntensity, _position, _kC, _kL, _kQ, 0);
     }
 
 
+
     // ***************** Getters/Setters ********************** //
+
+    /**
+     * Return PointLight position
+     * @return
+     */
+    public Point3D getPosition() {return this._position;}
+
+
+    /**
+     * Return PointLight radius
+     * @return
+     */
+    public double getRadius() {return this._radius;}
+
 
     /**
      * dummy overriding Light getIntensity()
