@@ -5,8 +5,8 @@ import org.junit.Test;
 import elements.*;
 import geometries.*;
 import primitives.*;
-import primitives.*;;
 import renderer.*;
+import renderer.Render;
 import scene.Scene;
 
 import java.io.IOException;
@@ -284,7 +284,9 @@ public class ImprovementsTests {
                 new Point3D(-100, 100, -200), new Vector(1, -1, 3), 1, 1E-5, 1.5E-7, 10 ));
 
         ImageWriter imageWriter = new ImageWriter("sphereTriangleInitialAdvanced", 200, 200, 400, 400);
-        Render render = new Render(imageWriter, scene);
+        Render render = new Render(imageWriter, scene).
+                setMultithreading(3).
+                setDebugPrint();
 
         render.renderImageAdvanced();
         render.writeToImage();
