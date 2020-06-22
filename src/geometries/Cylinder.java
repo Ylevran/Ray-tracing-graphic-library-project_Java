@@ -85,15 +85,46 @@ public class Cylinder extends Tube {
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
-        List<GeoPoint> intersections = super.findIntersections(ray);  // to return the intersection points
-        List<GeoPoint> result = new LinkedList<>();
+       Plane planeTop = new Plane(_axisRay.getTargetPoint(_height), _axisRay.getDirection());
+        Plane planeBottom = new Plane(_axisRay.getPoint(), _axisRay.getDirection());
+        List<GeoPoint> intersections = null;
+
+
+        List<GeoPoint> tempIntersection1 = planeBottom.findIntersections(ray);
+        if (tempIntersection1 != null) {
+            if (alignZero(_radius - _axisRay.getPoint().distance(tempIntersection1.get(0)._point)) > 0) {
+                intersections = new LinkedList<GeoPoint>();
+                intersections.add(tempIntersection1.get(0));
+            }
+        }
+
+        List<GeoPoint> tempIntersection2 = planeTop.findIntersections(ray);
+        if (tempIntersection2 != null) {
+            if (alignZero(_radius - _axisRay.getTargetPoint(_height).distance(tempIntersection2.get(0)._point)) > 0) {
+                if (intersections == null)
+                    intersections = new LinkedList<GeoPoint>();
+                intersections.add(tempIntersection2.get(0));
+            }
+        }
+
+        List<GeoPoint> tempIntersection3 = super.findIntersections(ray);
+        if (tempIntersection3 != null) {
+            double maxLenSquare = _height * _height + _radius * _radius;
+            for (GeoPoint geoPoint : tempIntersection3) {
+                if (alignZero(maxLenSquare - geoPoint._point.distanceSquared(_axisRay.getPoint())) > 0 &&
+                        alignZero(maxLenSquare - geoPoint._point.distanceSquared(_axisRay.getTargetPoint(_height))) > 0) {
+                    if (intersections == null)
+                        intersections = new LinkedList<GeoPoint>();
+                    intersections.add(geoPoint);
+                }
+            }
+        }
         if (intersections != null) {
             for (GeoPoint geoPoint : intersections) {
-                result.add(new GeoPoint(this, geoPoint.getPoint()));
+                geoPoint._geometry = this;
             }
-            return result;
         }
-        return null;
+        return intersections;
     }
 
 
