@@ -109,33 +109,44 @@ public class Camera {
 
         if (isZero(screenDistance)) throw new IllegalArgumentException("distance cannot be 0");
 
-        // Pc is the point in the middle of the screen (Pc = P0 + distance*Vto)
+        // Pc is the screen center (Pc = P0 + distance*Vto)
         Point3D Pc = _p0.add(_vTo.scale(screenDistance)); //image center
 
+        // pIJ is the pixel center
         Point3D pIJ = getPixelCenter(Pc, nX, nY, j, i, screenWidth, screenHeight);
 
         double Ry = screenHeight / nY; // pixel height
         double Rx = screenWidth / nX; // pixel width
 
-        for (int row = 0; row < SUPERSAMPLING_NUM ; ++ row)
-            for (int column = 0; column < SUPERSAMPLING_NUM ; ++column){
-                // pIJS is the center of the subpixel
-                Point3D pIJS = getPixelCenter(pIJ, SUPERSAMPLING_NUM, SUPERSAMPLING_NUM, column, row, Rx, Ry );
+        double Sry = Ry / (SUPERSAMPLING_NUM - 1); // subpixel height
+        double Srx = Rx / (SUPERSAMPLING_NUM - 1); // subpixel width
 
-                // Jittered randomization
-                double Sry = Ry / SUPERSAMPLING_NUM; // subpixel height
-                double Srx = Rx / SUPERSAMPLING_NUM; // subpixel width
-                double yRand = randomInRange(-Sry / 2 , Sry / 2);
-                double xRand = randomInRange(-Srx / 2 , Srx / 2);
-                if (!isZero(xRand)) pIJ = pIJ.add(_vRight.scale(xRand));
-                if (!isZero(yRand)) pIJ = pIJ.add(_vUp.scale(yRand));
+        // Move pIJ to the pixel top left corner
+        double X0 = ((- (SUPERSAMPLING_NUM - 1) / 2d) * Srx);
+        double Y0 = ((- (SUPERSAMPLING_NUM - 1) / 2d) * Sry);
+
+        pIJ = pIJ.add(_vRight.scale(X0));
+        pIJ = pIJ.add(_vUp.scale(-Y0));
+
+        // pIJS is moving on grid
+        Point3D pIJS = pIJ;
+
+        for (i = 0; i < SUPERSAMPLING_NUM ; ++i) {
+            for (j = 0; j < SUPERSAMPLING_NUM; ++j) {
 
                 // Create an Adding Ray to the beam
-                Vector vIJS = pIJS.subtract(_p0);
-                beam.add(new Ray(_p0, vIJS.normalize()));
+                Vector vIJ = pIJS.subtract(_p0);
+                beam.add(new Ray(_p0, vIJ.normalize()));
+
+                // Next point on i
+                pIJS = pIJS.add(_vRight.scale(Srx));
             }
+            // Next Point on j
+            pIJS = pIJ.add(_vUp.scale(- Sry * (j + 1)));
+        }
         return beam;
     }
+
 
     /**
      @param nX
@@ -167,19 +178,6 @@ public class Camera {
         return pIJ;
     }
 
-    /**
-     * Generate double random number in range
-     *
-     * @param min value in range
-     * @param max value in range
-     * @return rand num
-     */
-    private static double randomInRange(double min, double max) {
-        double range = max - min;
-        double scaled = random.nextDouble() * range;
-        double shifted = scaled + min;
-        return shifted; // == (rand.nextDouble() * (max-min)) + min;
-    }
 
     // ***************** Getters/Setters ********************** //
 
