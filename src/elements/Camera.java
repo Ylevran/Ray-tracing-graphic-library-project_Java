@@ -81,8 +81,8 @@ public class Camera {
 
         if (isZero(screenDistance)) throw new IllegalArgumentException("distance cannot be 0");
 
-        // Pc is the point in the middle of the screen (Pc = P0 + distance*Vto)
-        Point3D Pc = _p0.add(_vTo.scale(screenDistance)); //image center
+        // Pc is the screen center (Pc = P0 + distance*Vto)
+        Point3D Pc = _p0.add(_vTo.scale(screenDistance));
 
         Point3D pIJ = getPixelCenter(Pc, nX, nY, j, i, screenWidth, screenHeight);
 
@@ -163,7 +163,7 @@ public class Camera {
      *
      * @return pixel middle
      */
-    private Point3D getPixelCenter(Point3D center ,int nX, int nY, int j, int i, double screenWidth, double screenHeight) {
+    public Point3D getPixelCenter(Point3D center ,int nX, int nY, int j, int i, double screenWidth, double screenHeight) {
 
         double Ry = screenHeight / nY; // pixel height
         double Rx = screenWidth / nX; // pixel width

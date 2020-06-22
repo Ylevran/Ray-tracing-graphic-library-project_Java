@@ -1,7 +1,7 @@
 package primitives;
 
 
-
+import java.util.Objects;
 
 /**
  * Wrapper class for java.jwt.Color The constructors operate with any
@@ -178,4 +178,13 @@ public class Color {
         return new Color(r, g, b);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Color color = (Color) o;
+        return Double.compare(color._r, _r) == 0 &&
+                Double.compare(color._g, _g) == 0 &&
+                Double.compare(color._b, _b) == 0;
+    }
 }

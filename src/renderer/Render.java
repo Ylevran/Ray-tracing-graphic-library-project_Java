@@ -39,6 +39,8 @@ public class Render {
     private final int SPARE_THREADS = 2;
     private boolean _print = false;
 
+    private static final int MAX_SUPERSAMPLING_LEVEL = 3;
+
 
     // ***************** Constructors ********************** //
 
@@ -465,19 +467,6 @@ public class Render {
         double height = _imageWriter.getHeight();
 
         double distance = _scene.getDistance();
-
-
-//        for (int row = 0; row < nY; ++row) {
-//            for (int column = 0; column < nX; ++column) {
-//                Ray ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
-//                GeoPoint closestPoint = findClosestIntersection(ray);
-//
-//                List<Ray> rayList = camera.constructBeamThroughPixel(nX, nY, column, row, distance, width, height);
-//                _imageWriter.writePixel(column, row, closestPoint == null ? background : averageColor(rayList).getColor());
-//
-//            }
-//        }
-
         final Pixel thePixel = new Pixel(nY, nX);
 
         // Generate threads
@@ -512,7 +501,6 @@ public class Render {
      * @return
      */
     private Color averageColor(List<Ray> rayBeam){
-        java.awt.Color background = _scene.getBackground().getColor();
         Color color = new Color(0,0,0);
         for(Ray ray : rayBeam){
             color = findClosestIntersection(ray) == null ? color.add(_scene.getBackground())
@@ -692,6 +680,122 @@ public class Render {
         double scaled = random.nextDouble() * range;
         double shifted = scaled + min;
         return shifted; // == (rand.nextDouble() * (max-min)) + min;
+    }
+
+
+
+    // ********************** Acceleration: performance improvements **************************
+
+    /**
+     *  Throws rays through the all pixels and for each ray - if it's got
+     *  intersection points with the shapes of the scene - paints the closest point
+     */
+    public void renderImageAdvancedAcceleration() {
+        Camera camera = _scene.getCamera();
+        Intersectable geometries = _scene.getGeometries();
+        java.awt.Color background = _scene.getBackground().getColor();
+
+        //Nx and Ny are the number of pixels in the rows and columns of the view plane
+        int nX = _imageWriter.getNx();
+        int nY = _imageWriter.getNy();
+
+        //width and height are the width and height of the image.
+        double width = _imageWriter.getWidth();
+        double height = _imageWriter.getHeight();
+
+        double distance = _scene.getDistance();
+        // Pc is the screen center (Pc = P0 + distance*Vto)
+        Point3D Pc = camera.getP0().add(camera.getVTo().scale(distance));
+        final Pixel thePixel = new Pixel(nY, nX);
+
+        // Generate threads
+        Thread[] threads = new Thread[_threads];
+        for (int i = _threads - 1; i >= 0; --i) {
+            threads[i] = new Thread(() -> {
+                Pixel pixel = new Pixel();
+                while (thePixel.nextPixel(pixel)) {
+                    Ray ray = camera.constructRayThroughPixel(nX, nY, pixel.col, pixel.row, distance, width, height);
+                    GeoPoint closestPoint = findClosestIntersection(ray);
+
+                    Point3D pixelCenter = camera.getPixelCenter(Pc, nX, nY, pixel.col, pixel.row, width, height );
+
+                    _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
+                            areaColor(camera ,pixelCenter, width / nX, height / nY, MAX_SUPERSAMPLING_LEVEL).
+                            reduce(Math.pow((Math.pow(2, MAX_SUPERSAMPLING_LEVEL) + 1), 2)).getColor());
+                }
+            });
+        }
+
+        // Start threads
+        for (Thread thread : threads) thread.start();
+
+        // Wait for all threads to finish
+        for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
+        if (_print) System.out.printf("\r100%%\n");
+    }
+
+    private Color areaColor(Camera cam, Point3D center, double Rx, double Ry, int level){
+        Color color = new Color(0,0,0);
+
+        // Create 4 corners Rays and find their colors
+        Point3D p1 = center.add(cam.getVRight().scale(- Rx / 2));
+        p1 = p1.add(cam.getVUp().scale(Ry / 2));
+        Vector v1 = p1.subtract(cam.getP0());
+        Ray r1 = new Ray(cam.getP0(), v1.normalize());
+        Color c1 = findClosestIntersection(r1) == null ? _scene.getBackground()
+                : calcColorAdvanced(findClosestIntersection(r1),r1);
+
+        Point3D p2 = p1.add(cam.getVRight().scale(Rx));
+        Vector v2 = p2.subtract(cam.getP0());
+        Ray r2 = new Ray(cam.getP0(), v2.normalize());
+        Color c2 = findClosestIntersection(r2) == null ? _scene.getBackground()
+                : calcColorAdvanced(findClosestIntersection(r2),r2);
+
+        Point3D p3 = p2.add(cam.getVUp().scale(-Ry));
+        Vector v3 = p3.subtract(cam.getP0());
+        Ray r3 = new Ray(cam.getP0(), v3.normalize());
+        Color c3 = findClosestIntersection(r3) == null ? _scene.getBackground()
+                : calcColorAdvanced(findClosestIntersection(r3),r3);
+
+        Point3D p4 = p3.add(cam.getVRight().scale(-Rx));
+        Vector v4 = p4.subtract(cam.getP0());
+        Ray r4 = new Ray(cam.getP0(), v4.normalize());
+        Color c4 = findClosestIntersection(r4) == null ? _scene.getBackground()
+                : calcColorAdvanced(findClosestIntersection(r4),r4);
+
+        // last level condition
+        if (level == 0){
+            color = color.add(c1).add(c2).add(c3).add(c4);
+            return color;
+        }
+
+        // Check if 4 corners are the same color
+        if (c1.getColor().equals(c2.getColor())  && c2.getColor().equals(c3.getColor()) && c3.getColor().equals(c4.getColor())){
+            color = c1.scale(Math.pow((Math.pow(2, level) + 1), 2)); // color * (2^level +1)^2
+            return color;
+        }
+
+        // Explore top left area
+        Point3D newCenter = center.add(cam.getVRight().scale(- Rx / 4));
+        newCenter = newCenter.add(cam.getVUp().scale(Ry / 4));
+        color = color.add(areaColor(cam, newCenter, Rx / 2, Ry / 2, level - 1));
+
+        // Explore top right area
+        newCenter = center.add(cam.getVRight().scale(Rx / 4));
+        newCenter = newCenter.add(cam.getVUp().scale(Ry / 4));
+        color = color.add(areaColor(cam, newCenter, Rx / 2, Ry / 2, level - 1));
+
+        // Explore bottom left area
+        newCenter = center.add(cam.getVRight().scale(- Rx / 4));
+        newCenter = newCenter.add(cam.getVUp().scale(- Ry / 4));
+        color = color.add(areaColor(cam, newCenter, Rx / 2, Ry / 2, level - 1));
+
+        // Explore bottom right area
+        newCenter = center.add(cam.getVRight().scale(Rx / 4));
+        newCenter = newCenter.add(cam.getVUp().scale(- Ry / 4));
+        color = color.add(areaColor(cam, newCenter, Rx / 2, Ry / 2, level - 1));
+
+        return color;
     }
 
 
