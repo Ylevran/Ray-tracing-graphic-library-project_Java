@@ -769,6 +769,19 @@ public class Render {
         if (_print) System.out.printf("\r100%%\n");
     }
 
+    /**
+     * Recursive function for adaptive supersampling implementation
+     * @param cam - camera
+     * @param center center of the given area in the pixel
+     * @param c1 color of top left corner of the area
+     * @param c2 color of top right corner of the area
+     * @param c3 color of bottom right corner of the area
+     * @param c4 color of bottom left corner of the area
+     * @param Rx area width
+     * @param Ry area height
+     * @param level depth of recursion
+     * @return
+     */
     private Color areaColor(Camera cam, Point3D center, Color c1, Color c2, Color c3, Color c4,
                             double Rx, double Ry, int level){
 
