@@ -258,9 +258,11 @@ public class ImprovementsTests {
         scene.addLights(new DirectionalLight(new Color(255, 191, 191), new Vector(1, -1, 1)));
 
         ImageWriter imageWriter = new ImageWriter("coronaSphereAdvanced", 200, 200, 500, 500);
-        Render render = new Render(imageWriter, scene);
+        Render render = new Render(imageWriter, scene).
+                setMultithreading(3).
+                setDebugPrint();
 
-        render.renderImageAdvanced();
+        render.renderImageAdvancedAcceleration();
         render.writeToImage();
     }
 

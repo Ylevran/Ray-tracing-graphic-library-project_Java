@@ -21,6 +21,8 @@ public class Color {
 
     public final static Color BLACK = new Color();
 
+    private static final int SIMILAR_RANGE = 5;
+
 
     /**
      * Default constructor - to generate Black Color (privately)
@@ -178,13 +180,15 @@ public class Color {
         return new Color(r, g, b);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Color color = (Color) o;
-        return Double.compare(color._r, _r) == 0 &&
-                Double.compare(color._g, _g) == 0 &&
-                Double.compare(color._b, _b) == 0;
+    /**
+     * Check if color is similar color to this
+     * "similar" is defined by SIMILAR_RANGE
+     * @param color
+     * @return
+     */
+    public boolean similar(Color color) {
+        return Double.compare(color._r, _r - SIMILAR_RANGE) > 0 && Double.compare(color._r, _r + SIMILAR_RANGE) < 0 &&
+                Double.compare(color._b, _b - SIMILAR_RANGE) > 0 && Double.compare(color._b, _b + SIMILAR_RANGE) < 0 &&
+                Double.compare(color._g, _g - SIMILAR_RANGE) > 0 && Double.compare(color._g, _g + SIMILAR_RANGE) < 0;
     }
 }
