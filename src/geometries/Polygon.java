@@ -23,6 +23,8 @@ public class Polygon extends Geometry {
      */
     protected Plane _plane;
 
+    // ***************** Constructors ********************** //
+
     /**
      * Polygon constructor based on vertices list. The list must be ordered by edge
      * path. The polygon must be convex.
@@ -54,7 +56,7 @@ public class Polygon extends Geometry {
         _plane = new Plane(vertices[0], vertices[1], vertices[2]);
         if (vertices.length == 3) return; // no need for more tests for a Triangle
 
-        Vector n = _plane.getNormal();
+        Vector n = _plane.getNormal(null);
 
         // Subtracting any subsequent points will throw an IllegalArgumentException
         // because of Zero Vector if they are in the same point
@@ -99,9 +101,11 @@ public class Polygon extends Geometry {
     }
 
 
+    // ***************** Operations ******************** //
+
     @Override
     public Vector getNormal(Point3D point) {
-        return _plane.getNormal();
+        return _plane.getNormal(null);
     }
 
     @Override
@@ -112,8 +116,11 @@ public class Polygon extends Geometry {
         Point3D p0 = ray.getPoint();
         Vector v = ray.getDirection();
 
-        Vector v1 = _vertices.get(1).subtract(p0);
-        Vector v2 = _vertices.get(0).subtract(p0);
+      /*  Vector v1 = _vertices.get(1).subtract(p0);
+        Vector v2 = _vertices.get(0).subtract(p0);*/
+
+        Vector v1 = _vertices.get(1).subtract(p0).normalize();
+        Vector v2 = _vertices.get(0).subtract(p0).normalize();
 
         double sign = v.dotProduct(v1.crossProduct(v2));
         if (isZero(sign)) return null;
@@ -121,7 +128,8 @@ public class Polygon extends Geometry {
         boolean positive = sign > 0;
         for (int i = _vertices.size() - 1; i > 0; --i) {
             v1 = v2;
-            v2 = _vertices.get(i).subtract(p0);
+            //v2 = _vertices.get(i).subtract(p0);
+            v2 = _vertices.get(i).subtract(p0).normalize();
             sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
             if (isZero(sign)) return null;
             if (positive != (sign > 0)) return null;
@@ -129,7 +137,5 @@ public class Polygon extends Geometry {
 
         intersection.get(0)._geometry = this;
         return intersection;
-
-
     }
 }

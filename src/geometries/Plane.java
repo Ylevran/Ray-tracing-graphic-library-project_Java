@@ -73,9 +73,9 @@ public class Plane extends Geometry {
         return _normal;
     }
 
-    public Vector getNormal() {
+    /*public Vector getNormal() {
         return getNormal(null);
-    }
+    }*/
 
 
     // ***************** Administration  ******************** //
