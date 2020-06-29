@@ -52,6 +52,29 @@ public class Tube extends RadialGeometry {
 
     // ***************** Getters/Setters ********************** //
 
+    /**
+     * axisRay Getter
+     *
+     * @return axisRay
+     */
+    public Ray get_axisRay() {
+        return _axisRay;
+    }
+
+    // ***************** Administration  ******************** //
+
+
+
+    @Override
+    public String toString() {
+        return "Tube{" +
+                "_axisRay=" + _axisRay.toString() +
+                ", _radius=" + _radius +
+                '}';
+    }
+
+    // ***************** Operations ******************** //
+
     @Override
     public Vector getNormal(Point3D p) {
         //The vector from the point of the cylinder to the given point
@@ -71,27 +94,6 @@ public class Tube extends RadialGeometry {
         Vector check = p.subtract(o);
         return check.normalize();
     }
-
-    /**
-     * axisRay Getter
-     *
-     * @return axisRay
-     */
-    public Ray get_axisRay() {
-        return _axisRay;
-    }
-
-    // ***************** Administration  ******************** //
-
-    @Override
-    public String toString() {
-        return "Tube{" +
-                "_axisRay=" + _axisRay.toString() +
-                ", _radius=" + _radius +
-                '}';
-    }
-
-    // ***************** Operations ******************** //
 
     @Override
     public List<GeoPoint> findIntersections(Ray ray) {
