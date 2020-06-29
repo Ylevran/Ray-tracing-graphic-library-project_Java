@@ -26,8 +26,11 @@ public class DirectionalLight extends Light implements LightSource {
     // ***************** Getters/Setters ********************** //
 
     @Override
-    public Color getIntensity(Point3D p) {
-        return super.getIntensity();
+    public Color getIntensity(Point3D p)
+    {
+        //return super.getIntensity();
+        return new Color(_intensity);
+
     }
 
     @Override
