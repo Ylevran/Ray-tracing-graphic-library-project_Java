@@ -15,6 +15,18 @@ public class SpotLight extends PointLight {
     Vector _direction;
     double _concentration;
 
+    //***************** Constructors **********************//
+
+    /**
+     * @param colorIntensity
+     * @param position
+     * @param direction
+     * @param kC
+     * @param kL
+     * @param kQ
+     * @param concentration
+     * @param radius
+     */
     public SpotLight(Color colorIntensity, Point3D position, Vector direction, double kC, double kL, double kQ,
                      double concentration, double radius) {
         super(colorIntensity, position, kC, kL, kQ, radius);
@@ -22,13 +34,32 @@ public class SpotLight extends PointLight {
         this._concentration = concentration;
     }
 
+    /**
+     * @param colorIntensity
+     * @param position
+     * @param direction
+     * @param kC
+     * @param kL
+     * @param kQ
+     * @param radius
+     */
     public SpotLight(Color colorIntensity, Point3D position, Vector direction, double kC, double kL, double kQ, double radius) {
         this(colorIntensity, position, direction, kC, kL, kQ, 1,radius);
     }
 
+    /**
+     * @param colorIntensity
+     * @param position
+     * @param direction
+     * @param kC
+     * @param kL
+     * @param kQ
+     */
     public SpotLight(Color colorIntensity, Point3D position, Vector direction, double kC, double kL, double kQ) {
         this(colorIntensity, position, direction, kC, kL, kQ, 1,0);
     }
+
+    // ***************** Operations ******************** //
 
 
     /**
