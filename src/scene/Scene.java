@@ -178,7 +178,7 @@ public class Scene {
      */
     public void addLights(LightSource lights) {
         if(_lights == null){
-            _lights = new ArrayList<>();
+            _lights = new LinkedList<>();
         }
         _lights.addAll(Arrays.asList(lights));
     }
