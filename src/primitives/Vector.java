@@ -38,16 +38,18 @@ public class Vector {
      * @param z double value of z coordinate
      */
     public Vector(double x,double y, double z) {
-        this(new Point3D(x,y,z));
+        _head = new Point3D(x,y,z);
+        //this(new Point3D(x,y,z));
     }
-
 
     /**
      * Copy Constructor
      * @param v Vector
      */
     public Vector(Vector v) {
-        this(v._head);
+
+        //this(v._head);
+        _head = new Point3D(v._head._x._coord,v._head._y._coord,v._head._z._coord);
     }
 
     /**
@@ -72,7 +74,11 @@ public class Vector {
      * @return the new Vector after adding
      */
     public Vector add(Vector v) {
-        return new Vector(this._head.add(v));
+        //return new Vector(this._head.add(v));
+        return  new Vector(
+                this._head._x._coord + v._head._x._coord,
+                this._head._y._coord + v._head._y._coord,
+                this._head._z._coord + v._head._z._coord);
     }
 
     /**
@@ -91,10 +97,13 @@ public class Vector {
      */
     public Vector scale(double f){
         return new Vector(
-                new Point3D(
+                f * _head._x._coord,
+                f * _head._y._coord,
+                f * _head._z._coord);
+                /*new Point3D(
                         new Coordinate(f * _head._x._coord),
                         new Coordinate(f * _head._y._coord),
-                        new Coordinate(f * _head._z._coord)));
+                        new Coordinate(f * _head._z._coord)));*/
     }
 
     /**
@@ -117,7 +126,8 @@ public class Vector {
         double w1 = this._head._y._coord * v._head._z._coord - this._head._z._coord * v._head._y._coord;
         double w2 = this._head._z._coord * v._head._x._coord - this._head._x._coord * v._head._z._coord;
         double w3 = this._head._x._coord * v._head._y._coord - this._head._y._coord * v._head._x._coord;
-        return new Vector(new Point3D(w1, w2, w3));
+        //return new Vector(new Point3D(w1, w2, w3));
+        return new Vector(w1, w2, w3);
     }
 
     /**
@@ -185,8 +195,8 @@ public class Vector {
      * @return orthogonal vector
      */
     public Vector findOrthogonal(){
-        if (this._head.get_y()._coord == 0 &&  this._head.get_z()._coord == 0){
-            if (this._head.get_x()._coord == 0)
+        if (this._head._y._coord == 0 &&  this._head._z._coord == 0){
+            if (this._head._x._coord == 0)
                 throw new IllegalArgumentException("Zero Vector");
 
             else
