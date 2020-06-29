@@ -23,7 +23,7 @@ public class PlaneTests {
 
     /**
      * Test method for
-     * {@link Plane#getNormal()}
+     * {@link Plane#getNormal(Point3D)}
      */
     @Test
     public void getNormal() {
@@ -34,7 +34,7 @@ public class PlaneTests {
                 new Plane(
                         new Point3D(-1, 1, 2),
                         new Point3D(-4, 2, 2),
-                        new Point3D(-2, 1, 5)).getNormal());
+                        new Point3D(-2, 1, 5)).getNormal(null));
     }
 
 
