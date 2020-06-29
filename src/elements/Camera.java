@@ -6,6 +6,7 @@ import primitives.Util;
 import primitives.Vector;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -105,7 +106,7 @@ public class Camera {
      */
     public List<Ray> constructBeamThroughPixel(int nX, int nY, int j, int i, double screenDistance, double screenWidth,
                                                double screenHeight) {
-        List<Ray> beam = new ArrayList<Ray>();
+        List<Ray> beam = new LinkedList<>();
 
         if (isZero(screenDistance)) throw new IllegalArgumentException("distance cannot be 0");
 
@@ -171,7 +172,7 @@ public class Camera {
         double Yi = ((i - nY / 2d) * Ry + Ry / 2d);
         double Xj = ((j - nX / 2d) * Rx + Rx / 2d);
 
-        Point3D pIJ = center;  // pIJ is the point on the middle of the given pixel
+        Point3D pIJ = new Point3D(center);  // pIJ is the point on the middle of the given pixel
 
         if (!isZero(Xj)) pIJ = pIJ.add(_vRight.scale(Xj));
         if (!isZero(Yi)) pIJ = pIJ.add(_vUp.scale(-Yi));
