@@ -62,7 +62,6 @@ public class PointLight extends Light implements LightSource {
      */
     public Point3D getPosition() {return this._position;}
 
-
     /**
      * Return PointLight radius
      * @return
@@ -75,10 +74,10 @@ public class PointLight extends Light implements LightSource {
      *
      * @return
      */
-    @Override
+/*    @Override
     public Color getIntensity() {
         return super.getIntensity();
-    }
+    }*/
 
     /**
      * calculate the intensity of color of point on the geometry
