@@ -13,7 +13,6 @@ public abstract class Light {
 
      protected Color _intensity;
 
-
     //***************** Constructors **********************//
 
     /**
@@ -34,9 +33,9 @@ public abstract class Light {
      * Gets the original Light intensity I<sub>0</sub>
      * @return Light intensity
      */
-    public Color getIntensity(){
+/*    public Color getIntensity(){
         return new Color(_intensity);
-    }
+    }*/
 
 
 }
