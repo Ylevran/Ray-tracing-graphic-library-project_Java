@@ -16,28 +16,35 @@ public class Point3D {
 
     public final static Point3D ZERO = new Point3D(0.0, 0.0, 0.0);
 
+    // ***************** Constructors ********************** //
+
     /**
      * Point3D Constructor receiving three coordinates
-     * @param _x coordinate on the X axis
-     * @param _y coordinate on the Y axis
-     * @param _z coordinate on the Z axis
+     * @param x coordinate on the X axis
+     * @param y coordinate on the Y axis
+     * @param z coordinate on the Z axis
      */
-    public Point3D(Coordinate _x, Coordinate _y, Coordinate _z) {
-        this._x = _x;
+    public Point3D(Coordinate x, Coordinate y, Coordinate z) {
+        this(x._coord,y._coord,z._coord);
+        /*this._x = _x;
         this._y = _y;
-        this._z = _z;
+        this._z = _z;*/
     }
 
     /**
      * Point3D Constructor receiving three double params
-     * @param _x _coord value on the X axis
-     * @param _y _coord value on the Y axis
-     * @param _z _coord value on the Z axis
+     * @param x _coord value on the X axis
+     * @param y _coord value on the Y axis
+     * @param z _coord value on the Z axis
      */
-    public Point3D(double _x, double _y, double _z) {
-        this(new Coordinate(_x), new Coordinate(_y), new Coordinate(_z));
+    public Point3D(double x, double y, double z) {
+        this._x = new Coordinate(x);
+        this._y = new Coordinate(y);
+        this._z = new Coordinate(z);
+        //this(new Coordinate(_x), new Coordinate(_y), new Coordinate(_z));
     }
 
+    // ***************** Copy constructors ********************** //
 
     /**
      * Copy constructor
@@ -45,11 +52,15 @@ public class Point3D {
      * @param p
      */
     public Point3D(Point3D p) {
-        this._x = new Coordinate(p._x);
+        this(p._x,p._y,p._z);
+
+        /*this._x = new Coordinate(p._x);
         this._y = new Coordinate(p._y);
-        this._z = new Coordinate(p._z);
+        this._z = new Coordinate(p._z);*/
     }
 
+
+    // ***************** Getters/Setters ********************** //
 
     /**
      * x coordinate getter
@@ -75,6 +86,8 @@ public class Point3D {
         return new Coordinate(_z);
     }
 
+    // ***************** Administration  ******************** //
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,6 +97,16 @@ public class Point3D {
                 _y.equals(point3D._y) &&
                 _z.equals(point3D._z);
     }
+
+    @Override
+    public String toString() {
+        return "Point3D{" +
+                "x = " + _x +
+                ", y = " + _y +
+                ", z =" + _z +
+                '}';
+    }
+    // ***************** Operations ******************** //
 
     /**
      * Add vector to the Point3D
@@ -102,10 +125,10 @@ public class Point3D {
      * @return Vector from p to this
      */
     public Vector subtract(Point3D p) {
-        return new Vector(new Point3D(
+        return new Vector(/*new Point3D(*/
                 this._x._coord - p._x._coord,
                 this._y._coord - p._y._coord,
-                this._z._coord - p._z._coord));
+                this._z._coord - p._z._coord)/*)*/;
     }
 
     /**
@@ -128,12 +151,5 @@ public class Point3D {
         return Math.sqrt(distanceSquared(p));
     }
 
-    @Override
-    public String toString() {
-        return "Point3D{" +
-                "x = " + _x +
-                ", y = " + _y +
-                ", z =" + _z +
-                '}';
-    }
+
 }
