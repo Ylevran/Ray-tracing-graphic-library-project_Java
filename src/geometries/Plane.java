@@ -4,6 +4,7 @@ import elements.Material;
 import primitives.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.*;
@@ -28,7 +29,7 @@ public class Plane extends Geometry {
      * @param p3 third point
      */
     public Plane(Point3D p1, Point3D p2, Point3D p3) {
-        _p = new Point3D(p1.get_x(), p1.get_y(), p1.get_z());
+        _p = new Point3D(p1);
 
         Vector U = new Vector(p1, p2);
         Vector V = new Vector(p1, p3);
@@ -45,8 +46,8 @@ public class Plane extends Geometry {
      * @param _normal vector
      */
     public Plane(Point3D _p, Vector _normal) {
-        this._p = _p;
-        this._normal = _normal;
+        this._p = new Point3D(_p);
+        this._normal = new Vector(_normal);
     }
 
     /**
@@ -121,7 +122,7 @@ public class Plane extends Geometry {
      * @return list
      */
     public List<Vector> findOrthoBasis(){
-        List<Vector> basis = new ArrayList<Vector>();
+        List<Vector> basis = new LinkedList<>();
         Vector ortho1 = this._normal.findOrthogonal();
         basis.add(ortho1.normalize());
         Vector ortho2 = this._normal.crossProduct(ortho1);
