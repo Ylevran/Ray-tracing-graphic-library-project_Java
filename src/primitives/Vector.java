@@ -10,6 +10,10 @@ public class Vector {
 
     Point3D _head;
 
+
+    //***************** Constructors **********************//
+
+
     /**
      * Vector Constructor receiving Point3D
      * @param p Point 3D
@@ -38,8 +42,8 @@ public class Vector {
      * @param z double value of z coordinate
      */
     public Vector(double x,double y, double z) {
-        _head = new Point3D(x,y,z);
-        //this(new Point3D(x,y,z));
+        //_head = new Point3D(x,y,z);
+        this(new Point3D(x,y,z));
     }
 
     /**
@@ -48,8 +52,8 @@ public class Vector {
      */
     public Vector(Vector v) {
 
-        //this(v._head);
-        _head = new Point3D(v._head._x._coord,v._head._y._coord,v._head._z._coord);
+        this(v._head);
+        //_head = new Point3D(v._head._x._coord,v._head._y._coord,v._head._z._coord);
     }
 
     /**
@@ -126,8 +130,7 @@ public class Vector {
         double w1 = this._head._y._coord * v._head._z._coord - this._head._z._coord * v._head._y._coord;
         double w2 = this._head._z._coord * v._head._x._coord - this._head._x._coord * v._head._z._coord;
         double w3 = this._head._x._coord * v._head._y._coord - this._head._y._coord * v._head._x._coord;
-        //return new Vector(new Point3D(w1, w2, w3));
-        return new Vector(w1, w2, w3);
+        return new Vector(new Point3D(w1, w2, w3));
     }
 
     /**
