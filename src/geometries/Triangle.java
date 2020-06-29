@@ -5,6 +5,7 @@ import primitives.*;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,8 +51,6 @@ public class Triangle extends Polygon {
         this._material = material;
     }
 
-
-
     // ***************** Operations ******************** //
 
     @Override
@@ -77,7 +76,7 @@ public class Triangle extends Polygon {
 
         // if the intersection is inside triangle
         if ((d1 > 0.0 && d2 > 0.0 && d3 > 0.0) || (d1 < 0.0 && d2 < 0.0 && d3 < 0.0)) {
-            List<GeoPoint> result = new ArrayList<>();
+            List<GeoPoint> result = new LinkedList<>();
             for (GeoPoint geo : planeIntersections) {
                 result.add(new GeoPoint(this, geo.getPoint()));
             }
