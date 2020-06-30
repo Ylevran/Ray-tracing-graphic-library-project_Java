@@ -39,7 +39,7 @@ public class Render {
     private final int SPARE_THREADS = 2;
     private boolean _print = false;
 
-    private static final int SOFTSHADOWS_RAYS = 80;
+    private static final int SOFTSHADOW_RAYS = 80;
     private static final int MAX_SUPERSAMPLING_LEVEL = 3;
 
 
@@ -508,9 +508,6 @@ public class Render {
                 color = color.add(_scene.getBackground());
             else
                 color = color.add(calcColorAdvanced(findClosestIntersection(ray),ray));
-
-//            color = findClosestIntersection(ray) == null ? color.add(_scene.getBackground())
-//                    : color.add(calcColorAdvanced(findClosestIntersection(ray),ray));
         }
 
         return color.reduce(rayBeam.size());
@@ -653,7 +650,7 @@ public class Render {
 
         double softMean = 0;
 
-        for (int i = 0; i < SOFTSHADOWS_RAYS; ++i){
+        for (int i = 0; i < SOFTSHADOW_RAYS; ++i){
             // Generating random point on ls area
             Point3D rand = ls.getPosition();
             double rRand = randomInRange(0, Math.pow(ls.getRadius(), 2));
@@ -670,7 +667,7 @@ public class Render {
                 softMean++;
             }
         }
-        softMean = softMean / SOFTSHADOWS_RAYS;
+        softMean = softMean / SOFTSHADOW_RAYS;
         return softMean;
     }
 
