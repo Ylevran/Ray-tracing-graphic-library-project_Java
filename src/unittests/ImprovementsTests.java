@@ -46,7 +46,7 @@ public class ImprovementsTests {
         ImageWriter imageWriter = new ImageWriter("sphereTriangleInitial", 200, 200, 400, 400);
         Render render = new Render(imageWriter, scene);
 
-        render.renderImage();
+        render.renderImage(false, false, false);
         render.writeToImage();
     }
 
@@ -76,7 +76,7 @@ public class ImprovementsTests {
                 setMultithreading(3).
                 setDebugPrint();
 
-        render.renderImageAdvanced();
+        render.renderImage(true, true, false);
         render.writeToImage();
     }
 
@@ -105,7 +105,7 @@ public class ImprovementsTests {
                 setMultithreading(3).
                 setDebugPrint();
 
-        render.renderImageAdvancedAcceleration();
+        render.renderImage(false, true, true);
         render.writeToImage();
     }
 
@@ -220,7 +220,7 @@ public class ImprovementsTests {
         ImageWriter imageWriter = new ImageWriter("finalTest", 150, 150, 500, 500);
         Render render = new Render(imageWriter, scene);
 
-        render.renderImage();
+        render.renderImage(false, false, false);
         render.writeToImage();
     }
 
@@ -339,7 +339,7 @@ public class ImprovementsTests {
                 setMultithreading(3).
                 setDebugPrint();
 
-        render.renderImageAdvancedAcceleration();
+        render.renderImage(false, true, true);
         render.writeToImage();
     }
 }

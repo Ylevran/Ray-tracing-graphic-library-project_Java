@@ -165,7 +165,12 @@ public class Render {
      *  Throws rays through the all pixels and for each ray - if it's got
      *  intersection points with the shapes of the scene - paints the closest point
      */
-    public void renderImage() {
+    public void renderImage(boolean aAliasing , boolean sShadow, boolean adapAAliasing ) {
+
+        if (aAliasing == true && adapAAliasing == true)
+            throw new IllegalArgumentException("Cannot run Anti Aliasing and adaptive Anti Aliasing together");
+
+
         Camera camera = _scene.getCamera();
         Intersectable geometries = _scene.getGeometries();
         java.awt.Color background = _scene.getBackground().getColor();
@@ -180,14 +185,104 @@ public class Render {
 
         double distance = _scene.getDistance();
 
+        double Rx = width / nX; // pixel width
+        double Ry = height / nY; // pixel height
 
-        for (int row = 0; row < nY; ++row)
-            for (int column = 0; column < nX; ++column) {
-                Ray ray = camera.constructRayThroughPixel(nX,nY,column,row,distance,width,height);
-                GeoPoint closestPoint = findClosestIntersection(ray);
-                _imageWriter.writePixel(column,row,closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
+        // Pc is the screen center (Pc = P0 + distance*Vto)
+        Point3D Pc = camera.getP0().add(camera.getVTo().scale(distance));
 
-            }
+        final Pixel thePixel = new Pixel(nY, nX);
+
+        // Generate threads
+        Thread[] threads = new Thread[_threads];
+        for (int i = _threads - 1; i >= 0; --i) {
+            threads[i] = new Thread(() -> {
+                Pixel pixel = new Pixel();
+                while (thePixel.nextPixel(pixel)) {
+
+                    Ray ray = camera.constructRayThroughPixel(nX, nY, pixel.col, pixel.row, distance, width, height);
+                    GeoPoint closestPoint = findClosestIntersection(ray);
+
+                    // First case: without anti-aliasing
+                    if(aAliasing == false && adapAAliasing == false) {
+                        _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
+                                calcColor(closestPoint, ray).getColor());
+                    }
+
+                    // Second case: with anti-aliasing
+                    if(aAliasing == true) {
+                        List<Ray> rayList = camera.constructBeamThroughPixel(nX, nY, pixel.col, pixel.row, //
+                                distance, width, height);
+                        _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
+                                averageColor(rayList).getColor());
+                    }
+
+                    // Third case: with adaptive anti-aliasing
+                    if(adapAAliasing == true){
+
+                        Point3D pixelCenter = camera.getPixelCenter(Pc, nX, nY, pixel.col, pixel.row, width, height );
+
+                        // Create 4 corners pixel Rays and find their colors
+                        Point3D p1 = pixelCenter.add(camera.getVRight().scale(- Rx / 2));
+                        p1 = p1.add(camera.getVUp().scale(Ry / 2));
+                        Vector v1 = p1.subtract(camera.getP0());
+                        Ray r1 = new Ray(camera.getP0(), v1.normalize());
+                        Color c1 = findClosestIntersection(r1) == null ? _scene.getBackground()
+                                : calcColorAdvanced(findClosestIntersection(r1),r1);
+
+                        Point3D p2 = p1.add(camera.getVRight().scale(Rx));
+                        Vector v2 = p2.subtract(camera.getP0());
+                        Ray r2 = new Ray(camera.getP0(), v2.normalize());
+                        Color c2 = findClosestIntersection(r2) == null ? _scene.getBackground()
+                                : calcColorAdvanced(findClosestIntersection(r2),r2);
+
+                        Point3D p3 = p2.add(camera.getVUp().scale(-Ry));
+                        Vector v3 = p3.subtract(camera.getP0());
+                        Ray r3 = new Ray(camera.getP0(), v3.normalize());
+                        Color c3 = findClosestIntersection(r3) == null ? _scene.getBackground()
+                                : calcColorAdvanced(findClosestIntersection(r3),r3);
+
+                        Point3D p4 = p3.add(camera.getVRight().scale(-Rx));
+                        Vector v4 = p4.subtract(camera.getP0());
+                        Ray r4 = new Ray(camera.getP0(), v4.normalize());
+                        Color c4 = findClosestIntersection(r4) == null ? _scene.getBackground()
+                                : calcColorAdvanced(findClosestIntersection(r4),r4);
+
+                        _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
+                                areaColor(camera ,pixelCenter, c1, c2, c3, c4, width / nX, height / nY, MAX_SUPERSAMPLING_LEVEL).
+                                        reduce(Math.pow((Math.pow(2, MAX_SUPERSAMPLING_LEVEL)), 2)).getColor());
+
+                    }
+                }
+            });
+        }
+
+        // Start threads
+        for (Thread thread : threads) thread.start();
+
+        // Wait for all threads to finish
+        for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
+        if (_print) System.out.printf("\r100%%\n");
+
+
+
+
+        // First case: without anti-aliasing
+        if (aAliasing == false && adapAAliasing == false) {
+            for (int row = 0; row < nY; ++row)
+                for (int column = 0; column < nX; ++column) {
+                    Ray ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
+                    GeoPoint closestPoint = findClosestIntersection(ray);
+                    _imageWriter.writePixel(column, row, closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
+
+                }
+        }
+
+        // Second case: with anti-aliasing
+        if(aAliasing == true){
+
+
+        }
     }
 
 
@@ -451,51 +546,6 @@ public class Render {
     // ********************** Advanced functions for improvements features ***********************
 
     /**
-     *  Throws rays through the all pixels and for each ray - if it's got
-     *  intersection points with the shapes of the scene - paints the closest point
-     */
-    public void renderImageAdvanced() {
-        Camera camera = _scene.getCamera();
-        Intersectable geometries = _scene.getGeometries();
-        java.awt.Color background = _scene.getBackground().getColor();
-
-        //Nx and Ny are the number of pixels in the rows and columns of the view plane
-        int nX = _imageWriter.getNx();
-        int nY = _imageWriter.getNy();
-
-        //width and height are the width and height of the image.
-        double width = _imageWriter.getWidth();
-        double height = _imageWriter.getHeight();
-
-        double distance = _scene.getDistance();
-        final Pixel thePixel = new Pixel(nY, nX);
-
-        // Generate threads
-        Thread[] threads = new Thread[_threads];
-        for (int i = _threads - 1; i >= 0; --i) {
-            threads[i] = new Thread(() -> {
-                Pixel pixel = new Pixel();
-                while (thePixel.nextPixel(pixel)) {
-                    Ray ray = camera.constructRayThroughPixel(nX, nY, pixel.col, pixel.row, distance, width, height);
-                    GeoPoint closestPoint = findClosestIntersection(ray);
-
-                    List<Ray> rayList = camera.constructBeamThroughPixel(nX, nY, pixel.col, pixel.row, //
-                            distance, width, height);
-                    _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
-                            averageColor(rayList).getColor());
-                }
-            });
-        }
-
-        // Start threads
-        for (Thread thread : threads) thread.start();
-
-        // Wait for all threads to finish
-        for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
-        if (_print) System.out.printf("\r100%%\n");
-    }
-
-    /**
      * Calculate the average of a color in a pixel
      *
      * @param rayBeam
@@ -688,83 +738,6 @@ public class Render {
 
 
     // ********************** Acceleration: performance improvements **************************
-
-    /**
-     *  Throws rays through the all pixels and for each ray - if it's got
-     *  intersection points with the shapes of the scene - paints the closest point
-     */
-    public void renderImageAdvancedAcceleration() {
-        Camera camera = _scene.getCamera();
-        Intersectable geometries = _scene.getGeometries();
-        java.awt.Color background = _scene.getBackground().getColor();
-
-        //Nx and Ny are the number of pixels in the rows and columns of the view plane
-        int nX = _imageWriter.getNx();
-        int nY = _imageWriter.getNy();
-
-        //width and height are the width and height of the image.
-        double width = _imageWriter.getWidth();
-        double height = _imageWriter.getHeight();
-
-        double Rx = width / nX; // pixel width
-        double Ry = height / nY; // pixel height
-
-        double distance = _scene.getDistance();
-        // Pc is the screen center (Pc = P0 + distance*Vto)
-        Point3D Pc = camera.getP0().add(camera.getVTo().scale(distance));
-        final Pixel thePixel = new Pixel(nY, nX);
-
-        // Generate threads
-        Thread[] threads = new Thread[_threads];
-        for (int i = _threads - 1; i >= 0; --i) {
-            threads[i] = new Thread(() -> {
-                Pixel pixel = new Pixel();
-                while (thePixel.nextPixel(pixel)) {
-                    Ray ray = camera.constructRayThroughPixel(nX, nY, pixel.col, pixel.row, distance, width, height);
-                    GeoPoint closestPoint = findClosestIntersection(ray);
-
-                    Point3D pixelCenter = camera.getPixelCenter(Pc, nX, nY, pixel.col, pixel.row, width, height );
-
-                    // Create 4 corners pixel Rays and find their colors
-                    Point3D p1 = pixelCenter.add(camera.getVRight().scale(- Rx / 2));
-                    p1 = p1.add(camera.getVUp().scale(Ry / 2));
-                    Vector v1 = p1.subtract(camera.getP0());
-                    Ray r1 = new Ray(camera.getP0(), v1.normalize());
-                    Color c1 = findClosestIntersection(r1) == null ? _scene.getBackground()
-                            : calcColorAdvanced(findClosestIntersection(r1),r1);
-
-                    Point3D p2 = p1.add(camera.getVRight().scale(Rx));
-                    Vector v2 = p2.subtract(camera.getP0());
-                    Ray r2 = new Ray(camera.getP0(), v2.normalize());
-                    Color c2 = findClosestIntersection(r2) == null ? _scene.getBackground()
-                            : calcColorAdvanced(findClosestIntersection(r2),r2);
-
-                    Point3D p3 = p2.add(camera.getVUp().scale(-Ry));
-                    Vector v3 = p3.subtract(camera.getP0());
-                    Ray r3 = new Ray(camera.getP0(), v3.normalize());
-                    Color c3 = findClosestIntersection(r3) == null ? _scene.getBackground()
-                            : calcColorAdvanced(findClosestIntersection(r3),r3);
-
-                    Point3D p4 = p3.add(camera.getVRight().scale(-Rx));
-                    Vector v4 = p4.subtract(camera.getP0());
-                    Ray r4 = new Ray(camera.getP0(), v4.normalize());
-                    Color c4 = findClosestIntersection(r4) == null ? _scene.getBackground()
-                            : calcColorAdvanced(findClosestIntersection(r4),r4);
-
-                    _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
-                            areaColor(camera ,pixelCenter, c1, c2, c3, c4, width / nX, height / nY, MAX_SUPERSAMPLING_LEVEL).
-                            reduce(Math.pow((Math.pow(2, MAX_SUPERSAMPLING_LEVEL)), 2)).getColor());
-                }
-            });
-        }
-
-        // Start threads
-        for (Thread thread : threads) thread.start();
-
-        // Wait for all threads to finish
-        for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
-        if (_print) System.out.printf("\r100%%\n");
-    }
 
     /**
      * Recursive function for adaptive supersampling implementation

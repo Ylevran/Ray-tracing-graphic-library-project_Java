@@ -51,7 +51,7 @@ public class ReflectionRefractionTests {
         ImageWriter imageWriter = new ImageWriter("twoSpheres", 150, 150, 500, 500);
         Render render = new Render(imageWriter, scene);
 
-        render.renderImage();
+        render.renderImage(false, false, false);
         render.writeToImage();
     }
 
@@ -99,7 +99,7 @@ public class ReflectionRefractionTests {
         ImageWriter imageWriter = new ImageWriter("twoSpheresMirrored", 2500, 2500, 500, 500);
         Render render = new Render(imageWriter, scene);
 
-        render.renderImage();
+        render.renderImage(false, false, false);
         render.writeToImage();
     }
 
@@ -133,7 +133,7 @@ public class ReflectionRefractionTests {
         ImageWriter imageWriter = new ImageWriter("shadow with transparency", 200, 200, 600, 600);
         Render render = new Render(imageWriter, scene);
 
-        render.renderImage();
+        render.renderImage(false, false, false);
         render.writeToImage();
     }
 
@@ -305,7 +305,7 @@ public class ReflectionRefractionTests {
         ImageWriter imageWriter = new ImageWriter("coronaSphere", 200, 200, 500, 500);
         Render render = new Render(imageWriter, scene);
 
-        render.renderImage();
+        render.renderImage(false, false, false);
         render.writeToImage();
     }
 }

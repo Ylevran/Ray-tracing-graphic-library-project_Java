@@ -69,15 +69,6 @@ public class PointLight extends Light implements LightSource {
     public double getRadius() {return this._radius;}
 
 
-    /**
-     * dummy overriding Light getIntensity()
-     *
-     * @return
-     */
-/*    @Override
-    public Color getIntensity() {
-        return super.getIntensity();
-    }*/
 
     /**
      * calculate the intensity of color of point on the geometry
