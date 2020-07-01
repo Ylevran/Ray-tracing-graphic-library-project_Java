@@ -28,7 +28,7 @@ public class ImprovementsTests {
      * features: none
      */
     @Test
-    public void SphereTriangleInitial() {
+    public void SphereTriangle1() {
         Scene scene = new Scene("Test scene");
         scene.setCamera(new Camera(new Point3D(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(1000);
@@ -43,7 +43,7 @@ public class ImprovementsTests {
         scene.addLights(new SpotLight(new Color(400, 240, 0), //
                 new Point3D(-100, 100, -200), new Vector(1, -1, 3), 1, 1E-5, 1.5E-7, 10 ));
 
-        ImageWriter imageWriter = new ImageWriter("sphereTriangleInitial", 200, 200, 400, 400);
+        ImageWriter imageWriter = new ImageWriter("sphereTriangle1", 200, 200, 400, 400);
         Render render = new Render(imageWriter, scene);
 
         render.renderImage(false, false, false);
@@ -53,10 +53,10 @@ public class ImprovementsTests {
 
     /**
      * Produce a picture of a sphere and triangle with point light and shade
-     * features: anti-aliasing, soft-shadows
+     * features: anti-aliasing
      */
     @Test
-    public void SphereTriangleInitialAdvanced() {
+    public void SphereTriangle2() {
         Scene scene = new Scene("Test scene");
         scene.setCamera(new Camera(new Point3D(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(1000);
@@ -71,7 +71,7 @@ public class ImprovementsTests {
         scene.addLights(new SpotLight(new Color(400, 240, 0), //
                 new Point3D(-100, 100, -200), new Vector(1, -1, 3), 1, 1E-5, 1.5E-7, 10 ));
 
-        ImageWriter imageWriter = new ImageWriter("sphereTriangleInitialAdvanced", 200, 200, 400, 400);
+        ImageWriter imageWriter = new ImageWriter("sphereTriangle2", 200, 200, 400, 400);
         Render render = new Render(imageWriter, scene).
                 setMultithreading(3).
                 setDebugPrint();
@@ -82,10 +82,10 @@ public class ImprovementsTests {
 
     /**
      * Produce a picture of a sphere and triangle with point light and shade
-     * features: anti-aliasing, soft-shadows, multi-threading, adaptive anti-aliasing
+     * features: soft Shadow
      */
     @Test
-    public void SphereTriangleInitialAdvancedAcceleration() {
+    public void SphereTriangle3() {
         Scene scene = new Scene("Test scene");
         scene.setCamera(new Camera(new Point3D(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
         scene.setDistance(1000);
@@ -100,10 +100,62 @@ public class ImprovementsTests {
         scene.addLights(new SpotLight(new Color(400, 240, 0), //
                 new Point3D(-100, 100, -200), new Vector(1, -1, 3), 1, 1E-5, 1.5E-7, 10 ));
 
-        ImageWriter imageWriter = new ImageWriter("sphereTriangleInitialAdvancedAcceleration", 200, 200, 400, 400);
-        Render render = new Render(imageWriter, scene).
-                setMultithreading(3).
-                setDebugPrint();
+        ImageWriter imageWriter = new ImageWriter("sphereTriangle3", 200, 200, 400, 400);
+        Render render = new Render(imageWriter, scene);
+
+        render.renderImage(false, true, false);
+        render.writeToImage();
+    }
+
+    /**
+     * Produce a picture of a sphere and triangle with point light and shade
+     * features: anti-aliasing, soft-shadows
+     */
+    @Test
+    public void SphereTriangle4() {
+        Scene scene = new Scene("Test scene");
+        scene.setCamera(new Camera(new Point3D(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
+        scene.setDistance(1000);
+        scene.setBackground(Color.BLACK);
+        scene.setAmbientLight(new AmbientLight(Color.BLACK, 0));
+
+        scene.addGeometries(new Sphere(new Color(java.awt.Color.BLUE), new Material(0.5, 0.5, 30), //
+                        60, new Point3D(0, 0, 200)), //
+                new Triangle(new Color(java.awt.Color.BLUE), new Material(0.5, 0.5, 30), //
+                        new Point3D(-70, 40, 0), new Point3D(-40, 70, 0), new Point3D(-68, 68, 4)));
+
+        scene.addLights(new SpotLight(new Color(400, 240, 0), //
+                new Point3D(-100, 100, -200), new Vector(1, -1, 3), 1, 1E-5, 1.5E-7, 10 ));
+
+        ImageWriter imageWriter = new ImageWriter("sphereTriangle4", 200, 200, 400, 400);
+        Render render = new Render(imageWriter, scene);
+
+        render.renderImage(true, true, false);
+        render.writeToImage();
+    }
+
+    /**
+     * Produce a picture of a sphere and triangle with point light and shade
+     * features: soft-shadows, multi-threading, adaptive anti-aliasing
+     */
+    @Test
+    public void SphereTriangle5() {
+        Scene scene = new Scene("Test scene");
+        scene.setCamera(new Camera(new Point3D(0, 0, -1000), new Vector(0, 0, 1), new Vector(0, -1, 0)));
+        scene.setDistance(1000);
+        scene.setBackground(Color.BLACK);
+        scene.setAmbientLight(new AmbientLight(Color.BLACK, 0));
+
+        scene.addGeometries(new Sphere(new Color(java.awt.Color.BLUE), new Material(0.5, 0.5, 30), //
+                        60, new Point3D(0, 0, 200)), //
+                new Triangle(new Color(java.awt.Color.BLUE), new Material(0.5, 0.5, 30), //
+                        new Point3D(-70, 40, 0), new Point3D(-40, 70, 0), new Point3D(-68, 68, 4)));
+
+        scene.addLights(new SpotLight(new Color(400, 240, 0), //
+                new Point3D(-100, 100, -200), new Vector(1, -1, 3), 1, 1E-5, 1.5E-7, 10 ));
+
+        ImageWriter imageWriter = new ImageWriter("sphereTriangle5", 200, 200, 400, 400);
+        Render render = new Render(imageWriter, scene);
 
         render.renderImage(false, true, true);
         render.writeToImage();
@@ -114,7 +166,7 @@ public class ImprovementsTests {
      * features: none
      */
     @Test
-    public void finalTest() {
+    public void finalTest1() {
         Scene scene = new Scene("Test scene");
         scene.setCamera(new Camera(
                 new Point3D(0, 250, -80),
@@ -217,20 +269,19 @@ public class ImprovementsTests {
         scene.addLights(new SpotLight(new Color(1000, 600, 0), new Point3D(-100, 100, -500), new Vector(-1, 1, 2), 1,
                 0.0004, 0.0000006, 30));
 
-        ImageWriter imageWriter = new ImageWriter("finalTest", 150, 150, 500, 500);
+        ImageWriter imageWriter = new ImageWriter("finalTest1", 150, 150, 500, 500);
         Render render = new Render(imageWriter, scene);
 
         render.renderImage(false, false, false);
         render.writeToImage();
     }
 
-
     /**
      * Produce a complex picture with many geometries and many light sources
-     * features: anti-aliasing, soft-shadows, multi-threading, adaptive anti-aliasing
+     * features: soft-shadows, multi-threading, adaptive anti-aliasing
      */
     @Test
-    public void finalTestAdvanced() {
+    public void finalTest2() {
         Scene scene = new Scene("Test scene");
         scene.setCamera(new Camera(
                 new Point3D(0, 250, -80),
@@ -334,7 +385,7 @@ public class ImprovementsTests {
         scene.addLights(new SpotLight(new Color(1000, 600, 0), new Point3D(-100, 100, -500), new Vector(-1, 1, 2), 1,
                 0.0004, 0.0000006, 30));
 
-        ImageWriter imageWriter = new ImageWriter("finalTestAdvanced", 150, 150, 500, 500);
+        ImageWriter imageWriter = new ImageWriter("finalTest2", 150, 150, 500, 500);
         Render render = new Render(imageWriter, scene).
                 setMultithreading(3).
                 setDebugPrint();
@@ -342,4 +393,5 @@ public class ImprovementsTests {
         render.renderImage(false, true, true);
         render.writeToImage();
     }
+
 }

@@ -30,16 +30,20 @@ public class Render {
     private ImageWriter _imageWriter;
     private Scene _scene;
 
+    // static values for recursive calculating
     private static final int MAX_CALC_COLOR_LEVEL = 10;
     private static final double MIN_CALC_COLOR_K = 0.001;
 
     protected static Random random = new Random();
 
+    // threads static values
     private int _threads = 1;
     private final int SPARE_THREADS = 2;
     private boolean _print = false;
 
+    // number of shadowRays for soft shadow feature
     private static final int SOFTSHADOW_RAYS = 80;
+    // max level of recursion for adaptive anti-aliasing
     private static final int MAX_SUPERSAMPLING_LEVEL = 3;
 
 
@@ -162,11 +166,15 @@ public class Render {
     // ***************** Operations ******************** //
 
     /**
-     *  Throws rays through the all pixels and for each ray - if it's got
-     *  intersection points with the shapes of the scene - paints the closest point
+     * Throws rays through the all pixels and for each ray - if it's got
+     * intersection points with the shapes of the scene - paints the closest point
+     * @param aAliasing - classic Anti-aliasing feature on or off
+     * @param sShadow - soft shadow feature on or off
+     * @param adapAAliasing - adaptive anti aliasing acceleration on or off
      */
     public void renderImage(boolean aAliasing , boolean sShadow, boolean adapAAliasing ) {
 
+        // Error case
         if (aAliasing == true && adapAAliasing == true)
             throw new IllegalArgumentException("Cannot run Anti Aliasing and adaptive Anti Aliasing together");
 
@@ -206,15 +214,15 @@ public class Render {
                     // First case: without anti-aliasing
                     if(aAliasing == false && adapAAliasing == false) {
                         _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
-                                calcColor(closestPoint, ray).getColor());
+                                calcColor(closestPoint, ray, sShadow).getColor());
                     }
 
-                    // Second case: with anti-aliasing
+                    // Second case: with classic anti-aliasing
                     if(aAliasing == true) {
                         List<Ray> rayList = camera.constructBeamThroughPixel(nX, nY, pixel.col, pixel.row, //
                                 distance, width, height);
                         _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
-                                averageColor(rayList).getColor());
+                                averageColor(rayList, sShadow).getColor());
                     }
 
                     // Third case: with adaptive anti-aliasing
@@ -228,30 +236,29 @@ public class Render {
                         Vector v1 = p1.subtract(camera.getP0());
                         Ray r1 = new Ray(camera.getP0(), v1.normalize());
                         Color c1 = findClosestIntersection(r1) == null ? _scene.getBackground()
-                                : calcColorAdvanced(findClosestIntersection(r1),r1);
+                                : calcColor(findClosestIntersection(r1),r1, sShadow);
 
                         Point3D p2 = p1.add(camera.getVRight().scale(Rx));
                         Vector v2 = p2.subtract(camera.getP0());
                         Ray r2 = new Ray(camera.getP0(), v2.normalize());
                         Color c2 = findClosestIntersection(r2) == null ? _scene.getBackground()
-                                : calcColorAdvanced(findClosestIntersection(r2),r2);
+                                : calcColor(findClosestIntersection(r2),r2, sShadow);
 
                         Point3D p3 = p2.add(camera.getVUp().scale(-Ry));
                         Vector v3 = p3.subtract(camera.getP0());
                         Ray r3 = new Ray(camera.getP0(), v3.normalize());
                         Color c3 = findClosestIntersection(r3) == null ? _scene.getBackground()
-                                : calcColorAdvanced(findClosestIntersection(r3),r3);
+                                : calcColor(findClosestIntersection(r3),r3, sShadow);
 
                         Point3D p4 = p3.add(camera.getVRight().scale(-Rx));
                         Vector v4 = p4.subtract(camera.getP0());
                         Ray r4 = new Ray(camera.getP0(), v4.normalize());
                         Color c4 = findClosestIntersection(r4) == null ? _scene.getBackground()
-                                : calcColorAdvanced(findClosestIntersection(r4),r4);
+                                : calcColor(findClosestIntersection(r4),r4, sShadow);
 
                         _imageWriter.writePixel(pixel.col, pixel.row, closestPoint == null ? background : //
-                                areaColor(camera ,pixelCenter, c1, c2, c3, c4, width / nX, height / nY, MAX_SUPERSAMPLING_LEVEL).
+                                areaColor(camera ,pixelCenter, c1, c2, c3, c4, width / nX, height / nY, MAX_SUPERSAMPLING_LEVEL, sShadow).
                                         reduce(Math.pow((Math.pow(2, MAX_SUPERSAMPLING_LEVEL)), 2)).getColor());
-
                     }
                 }
             });
@@ -264,25 +271,6 @@ public class Render {
         for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
         if (_print) System.out.printf("\r100%%\n");
 
-
-
-
-        // First case: without anti-aliasing
-        if (aAliasing == false && adapAAliasing == false) {
-            for (int row = 0; row < nY; ++row)
-                for (int column = 0; column < nX; ++column) {
-                    Ray ray = camera.constructRayThroughPixel(nX, nY, column, row, distance, width, height);
-                    GeoPoint closestPoint = findClosestIntersection(ray);
-                    _imageWriter.writePixel(column, row, closestPoint == null ? background : calcColor(closestPoint, ray).getColor());
-
-                }
-        }
-
-        // Second case: with anti-aliasing
-        if(aAliasing == true){
-
-
-        }
     }
 
 
@@ -306,6 +294,7 @@ public class Render {
                     _imageWriter.writePixel(column,row,separator);
     }
 
+
     public void writeToImage() {
         _imageWriter.writeToImage();
     }
@@ -319,8 +308,8 @@ public class Render {
      * @param inRay
      * @return
      */
-    private Color calcColor(GeoPoint geopoint, Ray inRay) {
-        return calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0).add(
+    private Color calcColor(GeoPoint geopoint, Ray inRay, boolean sShadow) {
+        return calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0, sShadow).add(
                 _scene.getAmbientLight().getIntensity());
     }
 
@@ -329,10 +318,14 @@ public class Render {
      * Helping function for main calcColor
      * Calculates reflected color on point according to Phong model
      *
-     * @param gp
-     * @return color
+     * @param gp given point and having to find his color
+     * @param inRay Ray from camera to gp
+     * @param level for recursion operations
+     * @param k for recursion operations
+     * @param sShadow soft shadow yes or not
+     * @return
      */
-    private Color calcColor(GeoPoint gp, Ray inRay, int level, double k)  {
+    private Color calcColor(GeoPoint gp, Ray inRay, int level, double k, boolean sShadow)  {
 
         if (level == 0 || k < MIN_CALC_COLOR_K) {
             return Color.BLACK;
@@ -359,7 +352,21 @@ public class Render {
                 double nv = alignZero(n.dotProduct(v));
 
                 if (sign(nl) == sign(nv)) { // Check that 𝒔𝒊𝒈𝒏(𝒍∙𝒏) == 𝒔𝒊𝒈𝒏(𝒗∙𝒏) according to Phong reflectance model
-                    double ktr = transparency(lightSource, l, n, gp);
+
+                    double ktr; // transparency factor
+
+                    // Shadow calculating
+                    // First case: Soft Shadow feature
+                    if (sShadow == true && lightSource instanceof PointLight &&
+                            ((PointLight) lightSource).getRadius() != 0) { // with soft shadow
+                        ktr = transparency((PointLight) lightSource, l, n, gp, true);
+                    }
+                    // Second case: without Soft Shadow feature
+                    else {
+                        ktr = transparency(lightSource, l, n, gp, false); // without soft shadow
+                    }
+
+
                     if (ktr * k > MIN_CALC_COLOR_K) {
                         Color lightIntensity = lightSource.getIntensity(gp.getPoint()).scale(ktr);
                         color = color.add(
@@ -379,7 +386,7 @@ public class Render {
             Ray reflectedRay = constructReflectedRay(gp.getPoint(), inRay, n);
             GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
             if (reflectedPoint != null){
-                color = color.add(calcColor(reflectedPoint, reflectedRay, level-1, kkr).scale(kr));
+                color = color.add(calcColor(reflectedPoint, reflectedRay, level-1, kkr, false).scale(kr));
             }
         }
 
@@ -389,7 +396,7 @@ public class Render {
             Ray refractedRay = constructRefractedRay(gp.getPoint(), inRay, n);
             GeoPoint refractedPoint = findClosestIntersection(refractedRay);
             if (refractedPoint != null){
-                color = color.add(calcColor(refractedPoint, refractedRay, level-1, kkt).scale(kt));
+                color = color.add(calcColor(refractedPoint, refractedRay, level-1, kkt, false).scale(kt));
             }
         }
 
@@ -397,13 +404,14 @@ public class Render {
     }
 
     /**
-     *
+     * return true if val > 0
      * @param val
      * @return
      */
     private boolean sign(double val) {
         return (val > 0d);
     }
+
 
     /**
      * Calculate Diffusive component of light reflection.
@@ -460,26 +468,38 @@ public class Render {
      * @param geoPoint
      * @return transparency factor
      */
-    private double transparency(LightSource ls, Vector l, Vector n, GeoPoint geoPoint){
-        Vector lightDirection = l.scale(-1); // from point to light source
+    private double transparency(LightSource ls, Vector l, Vector n, GeoPoint geoPoint, boolean sShadow){
 
+        // Create Ray from geoPoint to lightSource
+        Vector lightDirection = l.scale(-1);
         Ray lightRay = new Ray(geoPoint.getPoint(), lightDirection, n);
 
+        // First Case: without intersections between geoPoint and lightSource
+        // return factor 1 * softShadow (if ss on)
         List<GeoPoint> intersections = _scene.getGeometries().findIntersections(lightRay);
-        if (intersections == null)
-            return 1.0;
+        if (intersections == null) {
+            if (sShadow == false)
+                return 1.0;
+            return 1.0 * softShadow((PointLight)ls, geoPoint, l, n);
+        }
 
+        // Second Case: with intersections between geoPoint and lightSource
+        // return factor != 1 * softShadow (if ss on)
         double lightDistance = ls.getDistance(geoPoint.getPoint());
         double ktr = 1.0;
         for (GeoPoint gp : intersections) {
             if (alignZero(gp.getPoint().distance(geoPoint.getPoint()) - lightDistance) <= 0){
                 ktr *= gp.getGeometry().getMaterial().getKt();
-                if (ktr < MIN_CALC_COLOR_K)
-                    return 0.0;
+                if (ktr < MIN_CALC_COLOR_K) {
+                    if(sShadow == false)
+                        return 0.0;
+                    return softShadow((PointLight)ls, geoPoint, l, n);
+                }
             }
         }
-
-        return ktr;
+        if (sShadow == false)
+            return ktr;
+        return ktr * softShadow((PointLight)ls, geoPoint, l, n);
     }
 
 
@@ -546,171 +566,50 @@ public class Render {
     // ********************** Advanced functions for improvements features ***********************
 
     /**
-     * Calculate the average of a color in a pixel
+     * Calculate the average of a color of a rays beam
      *
      * @param rayBeam
-     * @return
+     * @return average Color of the beam
      */
-    private Color averageColor(List<Ray> rayBeam){
+    private Color averageColor(List<Ray> rayBeam, boolean sShadow){
         Color color = new Color(0,0,0);
+
         for(Ray ray : rayBeam){
-            if (findClosestIntersection(ray) == null)
-                color = color.add(_scene.getBackground());
-            else
-                color = color.add(calcColorAdvanced(findClosestIntersection(ray),ray));
+            color = findClosestIntersection(ray) == null ? color.add(_scene.getBackground())
+                    : color.add(calcColor(findClosestIntersection(ray),ray, sShadow));
         }
 
+        // average calculation
         return color.reduce(rayBeam.size());
     }
 
     /**
-     * Calculates reflected color on point according to Phong model.
-     * Calls for recursive helping function.
-     *
-     * @param geopoint
-     * @param inRay
-     * @return
-     */
-    private Color calcColorAdvanced(GeoPoint geopoint, Ray inRay) {
-        return calcColorAdvanced(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0).add(
-                _scene.getAmbientLight().getIntensity());
-    }
-
-    /**
-     * Helping function for main calcColor
-     * Calculates reflected color on point according to Phong model
-     *
-     * @param gp
-     * @return color
-     */
-    private Color calcColorAdvanced(GeoPoint gp, Ray inRay, int level, double k)  {
-
-        if (level == 0 || k < MIN_CALC_COLOR_K) {
-            return Color.BLACK;
-        }
-
-        Color color = gp.getGeometry().getEmissionLight();
-
-        Vector v = gp.getPoint().subtract(_scene.getCamera().getP0()).normalize(); //direction from point of view to point
-        Vector n = gp.getGeometry().getNormal(gp.getPoint()); //normal ray to the surface at the point
-
-        Material material = gp.getGeometry().getMaterial();
-
-        int nShininess = material.getNShininess(); //degree of light shining of the material
-
-        double kd = material.getKd(); //degree of diffusion of the material
-        double ks = material.getKs(); //degree of light return shining of the material
-
-
-        if(_scene.getLightSources() != null) {
-            for (LightSource lightSource : _scene.getLightSources()) {
-
-                Vector l = lightSource.getL(gp.getPoint()); //the ray of the light
-                double nl = alignZero(n.dotProduct(l)); //dot-product n*l
-                double nv = alignZero(n.dotProduct(v));
-
-                if (sign(nl) == sign(nv)) { // Check that 𝒔𝒊𝒈𝒏(𝒍∙𝒏) == 𝒔𝒊𝒈𝒏(𝒗∙𝒏) according to Phong reflectance model
-                    double ktr; // shadow calculating
-                    if (lightSource instanceof PointLight && ((PointLight) lightSource).getRadius() != 0) { // with soft shadow
-                        ktr = transparencyAdvanced((PointLight) lightSource, l, n, gp);
-                    }
-                    else{
-                        ktr = transparency(lightSource, l, n, gp); // without soft shadow
-                    }
-                    if (ktr * k > MIN_CALC_COLOR_K) {
-                        Color lightIntensity = lightSource.getIntensity(gp.getPoint()).scale(ktr);
-                        color = color.add(
-                                calcDiffusive(kd, nl, lightIntensity),
-                                calcSpecular(ks, l, n, nl, v, nShininess, lightIntensity));
-                    }
-                }
-            }
-        }
-
-        if (level == 1)
-            return Color.BLACK;
-
-        double kr = material.getKr(); //degree of material reflection
-        double kkr = k * kr;
-        if (kkr > MIN_CALC_COLOR_K){
-            Ray reflectedRay = constructReflectedRay(gp.getPoint(), inRay, n);
-            GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
-            if (reflectedPoint != null){
-                color = color.add(calcColor(reflectedPoint, reflectedRay, level-1, kkr).scale(kr));
-            }
-        }
-
-        double kt = material.getKt(); //degree of material transparency
-        double kkt = k * kt;
-        if (kkt > MIN_CALC_COLOR_K){
-            Ray refractedRay = constructRefractedRay(gp.getPoint(), inRay, n);
-            GeoPoint refractedPoint = findClosestIntersection(refractedRay);
-            if (refractedPoint != null){
-                color = color.add(calcColor(refractedPoint, refractedRay, level-1, kkt).scale(kt));
-            }
-        }
-
-        return color;
-    }
-
-    /**
-     * Returns transparency factor on specific point with soft shadow
-     * @param ls
-     * @param l
-     * @param n
-     * @param geoPoint
-     * @return
-     */
-    private double transparencyAdvanced(PointLight ls, Vector l, Vector n, GeoPoint geoPoint){
-        Vector lightDirection = l.scale(-1); // from point to light source
-
-        Ray lightRay = new Ray(geoPoint.getPoint(), lightDirection, n);
-
-        List<GeoPoint> intersections = _scene.getGeometries().findIntersections(lightRay);
-        if (intersections == null)
-            return 1.0 * softShadow(ls, geoPoint, l, n);
-
-        double lightDistance = ls.getDistance(geoPoint.getPoint());
-        double ktr = 1.0;
-        for (GeoPoint gp : intersections) {
-            if (alignZero(gp.getPoint().distance(geoPoint.getPoint()) - lightDistance) <= 0){
-                ktr *= gp.getGeometry().getMaterial().getKt();
-                if (ktr < MIN_CALC_COLOR_K)
-                    return softShadow(ls, geoPoint, l, n);
-            }
-        }
-
-        return ktr * softShadow(ls, geoPoint, l, n);
-
-    }
-
-    /**
      * Return transparency coefficient based on beam sampling for soft shadow
-     * @param ls
+     * @param ls Point light Source
      * @param geoPoint
-     * @param l
-     * @param n
-     * @return
+     * @param l vector form ls center to geo Point
+     * @param n normal vector of geometry on geoPoint
+     * @return soft Shadow factor for geoPoint
      */
     private double softShadow(PointLight ls, GeoPoint geoPoint, Vector l, Vector n){
 
-        // Find plane orthonormal basis
+        // Find plane (perpendicular to l) orthonormal basis
         Plane plane = new Plane(ls.getPosition(), l);
-        List<Vector> basis = plane.findOrthoBasis();
+        List<Vector> basic = plane.findOrthoBasis();
 
-        double softMean = 0;
+        double softMean = 0; // Counter rays that arrive to ls
 
         for (int i = 0; i < SOFTSHADOW_RAYS; ++i){
-            // Generating random point on ls area
+            // Generating random point on ls area based on basic
             Point3D rand = ls.getPosition();
             double rRand = randomInRange(0, Math.pow(ls.getRadius(), 2));
             double angleRand = randomInRange(0, 2 * Math.PI);
             double yRand = Math.sqrt(rRand) * Math.sin(angleRand);
             double xRand = Math.sqrt(rRand) * Math.cos(angleRand);
-            if (!isZero(xRand)) rand = rand.add(basis.get(0).scale(xRand));
-            if (!isZero(yRand)) rand = rand.add(basis.get(1).scale(yRand));
+            if (!isZero(xRand)) rand = rand.add(basic.get(0).scale(xRand));
+            if (!isZero(yRand)) rand = rand.add(basic.get(1).scale(yRand));
 
-            // Check intersection from geopoint
+            // Check intersection from geopoint to random point
             Ray lightRay = new Ray(geoPoint.getPoint(), new Vector(rand, geoPoint.getPoint()), n);
             List<GeoPoint> intersections = _scene.getGeometries().findIntersections(lightRay);
             if (intersections == null){
@@ -753,7 +652,7 @@ public class Render {
      * @return
      */
     private Color areaColor(Camera cam, Point3D center, Color c1, Color c2, Color c3, Color c4,
-                            double Rx, double Ry, int level){
+                            double Rx, double Ry, int level, boolean sShadow){
 
         Color color = new Color(0,0,0);
 
@@ -776,55 +675,55 @@ public class Render {
         Vector v0 = center.subtract(cam.getP0());
         Ray r0 = new Ray(cam.getP0(), v0.normalize());
         Color c0 = findClosestIntersection(r0) == null ? _scene.getBackground()
-                : calcColorAdvanced(findClosestIntersection(r0),r0);
+                : calcColor(findClosestIntersection(r0),r0, sShadow);
 
         // left new point
         Point3D p1 = center.add(cam.getVRight().scale(- Rx / 2));
         Vector v1 = p1.subtract(cam.getP0());
         Ray r1 = new Ray(cam.getP0(), v1.normalize());
         Color c5 = findClosestIntersection(r1) == null ? _scene.getBackground()
-                : calcColorAdvanced(findClosestIntersection(r1),r1);
+                : calcColor(findClosestIntersection(r1),r1, sShadow);
 
         // top new point
         Point3D p2 = center.add(cam.getVUp().scale(Ry / 2));
         Vector v2 = p2.subtract(cam.getP0());
         Ray r2 = new Ray(cam.getP0(), v2.normalize());
         Color c6 = findClosestIntersection(r2) == null ? _scene.getBackground()
-                : calcColorAdvanced(findClosestIntersection(r2),r2);
+                : calcColor(findClosestIntersection(r2),r2, sShadow);
 
         // right new point
         Point3D p3 = center.add(cam.getVRight().scale(Rx / 2));
         Vector v3 = p3.subtract(cam.getP0());
         Ray r3 = new Ray(cam.getP0(), v3.normalize());
         Color c7 = findClosestIntersection(r3) == null ? _scene.getBackground()
-                : calcColorAdvanced(findClosestIntersection(r3),r3);
+                : calcColor(findClosestIntersection(r3),r3, sShadow);
 
         // bottom new point
         Point3D p4 = center.add(cam.getVUp().scale(- Ry / 2));
         Vector v4 = p4.subtract(cam.getP0());
         Ray r4 = new Ray(cam.getP0(), v4.normalize());
         Color c8 = findClosestIntersection(r4) == null ? _scene.getBackground()
-                : calcColorAdvanced(findClosestIntersection(r4),r4);
+                : calcColor(findClosestIntersection(r4),r4, sShadow);
 
         // Recursive call for top left area
         Point3D newCenter = center.add(cam.getVRight().scale(- Rx / 4));
         newCenter = newCenter.add(cam.getVUp().scale(Ry / 4));
-        color = color.add(areaColor(cam, newCenter, c1, c6, c0, c5,Rx / 2, Ry / 2, level - 1));
+        color = color.add(areaColor(cam, newCenter, c1, c6, c0, c5,Rx / 2, Ry / 2, level - 1, sShadow));
 
         // Recursive call for top right area
         newCenter = center.add(cam.getVRight().scale(Rx / 4));
         newCenter = newCenter.add(cam.getVUp().scale(Ry / 4));
-        color = color.add(areaColor(cam, newCenter, c6, c2, c7, c0, Rx / 2, Ry / 2, level - 1));
+        color = color.add(areaColor(cam, newCenter, c6, c2, c7, c0, Rx / 2, Ry / 2, level - 1, sShadow));
 
         // Recursive call for bottom left area
         newCenter = center.add(cam.getVRight().scale(- Rx / 4));
         newCenter = newCenter.add(cam.getVUp().scale(- Ry / 4));
-        color = color.add(areaColor(cam, newCenter, c0, c7, c3, c8, Rx / 2, Ry / 2, level - 1));
+        color = color.add(areaColor(cam, newCenter, c0, c7, c3, c8, Rx / 2, Ry / 2, level - 1, sShadow));
 
         // Recursive call for bottom right area
         newCenter = center.add(cam.getVRight().scale(Rx / 4));
         newCenter = newCenter.add(cam.getVUp().scale(- Ry / 4));
-        color = color.add(areaColor(cam, newCenter, c5, c0, c8, c4, Rx / 2, Ry / 2, level - 1));
+        color = color.add(areaColor(cam, newCenter, c5, c0, c8, c4, Rx / 2, Ry / 2, level - 1, sShadow));
 
         return color;
     }
