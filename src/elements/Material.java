@@ -8,9 +8,9 @@ import java.io.IOException;
 
 /**
  *
- * @author Yossef Levran, ID: 332484609, Email Address: yossef.levran@gmail.com
+ * @author Yossef Levran
  *
- * @author Shmuel Segal, ID: 052970464, Email address: shmuelse@gmail.com
+ * @author Shmuel Segal
  */
 public class Material {
 

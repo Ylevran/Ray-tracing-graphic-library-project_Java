@@ -25,9 +25,6 @@ public class Point3D {
      */
     public Point3D(Coordinate x, Coordinate y, Coordinate z) {
         this(x._coord,y._coord,z._coord);
-        /*this._x = _x;
-        this._y = _y;
-        this._z = _z;*/
     }
 
     /**
@@ -40,7 +37,6 @@ public class Point3D {
         this._x = new Coordinate(x);
         this._y = new Coordinate(y);
         this._z = new Coordinate(z);
-        //this(new Coordinate(_x), new Coordinate(_y), new Coordinate(_z));
     }
 
     // ***************** Copy constructors ********************** //
@@ -52,10 +48,6 @@ public class Point3D {
      */
     public Point3D(Point3D p) {
         this(p._x,p._y,p._z);
-
-        /*this._x = new Coordinate(p._x);
-        this._y = new Coordinate(p._y);
-        this._z = new Coordinate(p._z);*/
     }
 
 
@@ -113,7 +105,8 @@ public class Point3D {
      * @return new Point3D
      */
     public Point3D add(Vector v) {
-        return new Point3D(this._x._coord + v._head._x._coord,
+        return new Point3D(
+                this._x._coord + v._head._x._coord,
                 this._y._coord + v._head._y._coord,
                 this._z._coord + v._head._z._coord);
     }
@@ -124,10 +117,10 @@ public class Point3D {
      * @return Vector from p to this
      */
     public Vector subtract(Point3D p) {
-        return new Vector(/*new Point3D(*/
+        return new Vector(
                 this._x._coord - p._x._coord,
                 this._y._coord - p._y._coord,
-                this._z._coord - p._z._coord)/*)*/;
+                this._z._coord - p._z._coord);
     }
 
     /**

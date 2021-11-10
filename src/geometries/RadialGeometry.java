@@ -6,7 +6,7 @@ package geometries;
  */
 public abstract class RadialGeometry extends Geometry{
 
-    double  _radius;
+    double _radius;
 
     /**
      * RadialGeometry Constructor receiving radius

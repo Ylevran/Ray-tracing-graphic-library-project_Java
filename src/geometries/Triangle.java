@@ -59,7 +59,6 @@ public class Triangle extends Polygon {
         List<GeoPoint> planeIntersections = _plane.findIntersections(ray);
 
 
-        //Point3D p0 = ray.getPoint();
         Vector v = ray.getDirection();
 
         Vector v1 = _vertices.get(0).subtract(ray.getPoint());

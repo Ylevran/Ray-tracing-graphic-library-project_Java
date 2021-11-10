@@ -86,7 +86,7 @@ public class Polygon extends Geometry {
     }
 
     /**
-     * Polycon Constructor receiving vertices and color
+     * Polygon Constructor receiving vertices and color
      * @param emission
      * @param vertices
      */
@@ -116,9 +116,6 @@ public class Polygon extends Geometry {
         Point3D p0 = ray.getPoint();
         Vector v = ray.getDirection();
 
-      /*  Vector v1 = _vertices.get(1).subtract(p0);
-        Vector v2 = _vertices.get(0).subtract(p0);*/
-
         Vector v1 = _vertices.get(1).subtract(p0).normalize();
         Vector v2 = _vertices.get(0).subtract(p0).normalize();
 
@@ -128,7 +125,6 @@ public class Polygon extends Geometry {
         boolean positive = sign > 0;
         for (int i = _vertices.size() - 1; i > 0; --i) {
             v1 = v2;
-            //v2 = _vertices.get(i).subtract(p0);
             v2 = _vertices.get(i).subtract(p0).normalize();
             sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
             if (isZero(sign)) return null;
