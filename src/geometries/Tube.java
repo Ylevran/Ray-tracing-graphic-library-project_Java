@@ -13,7 +13,6 @@ import static primitives.Util.isZero;
  */
 public class Tube extends RadialGeometry {
 
-    //TODO Test
     protected final Ray _axisRay;
 
 

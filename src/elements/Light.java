@@ -23,19 +23,5 @@ public abstract class Light {
         this._intensity = _intensity;
     }
 
-    /*public Light() {
-        this._intensity = Color.BLACK;
-    }*/
-
-    // ***************** Getters/Setters ********************** //
-
-    /**
-     * Gets the original Light intensity I<sub>0</sub>
-     * @return Light intensity
-     */
-/*    public Color getIntensity(){
-        return new Color(_intensity);
-    }*/
-
 
 }

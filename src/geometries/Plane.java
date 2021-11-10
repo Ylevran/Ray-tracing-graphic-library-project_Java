@@ -16,7 +16,7 @@ import static primitives.Util.*;
 public class Plane extends Geometry {
 
     Point3D _p;
-    primitives.Vector _normal;
+    Vector _normal;
 
 
     // ***************** Constructors ********************** //
@@ -72,11 +72,6 @@ public class Plane extends Geometry {
     public Vector getNormal(Point3D p) {
         return _normal;
     }
-
-    /*public Vector getNormal() {
-        return getNormal(null);
-    }*/
-
 
     // ***************** Administration  ******************** //
 

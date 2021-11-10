@@ -42,7 +42,6 @@ public class Vector {
      * @param z double value of z coordinate
      */
     public Vector(double x,double y, double z) {
-        //_head = new Point3D(x,y,z);
         this(new Point3D(x,y,z));
     }
 
@@ -51,9 +50,7 @@ public class Vector {
      * @param v Vector
      */
     public Vector(Vector v) {
-
         this(v._head);
-        //_head = new Point3D(v._head._x._coord,v._head._y._coord,v._head._z._coord);
     }
 
     /**
@@ -78,7 +75,6 @@ public class Vector {
      * @return the new Vector after adding
      */
     public Vector add(Vector v) {
-        //return new Vector(this._head.add(v));
         return  new Vector(
                 this._head._x._coord + v._head._x._coord,
                 this._head._y._coord + v._head._y._coord,
@@ -104,10 +100,6 @@ public class Vector {
                 f * _head._x._coord,
                 f * _head._y._coord,
                 f * _head._z._coord);
-                /*new Point3D(
-                        new Coordinate(f * _head._x._coord),
-                        new Coordinate(f * _head._y._coord),
-                        new Coordinate(f * _head._z._coord)));*/
     }
 
     /**

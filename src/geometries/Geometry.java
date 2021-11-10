@@ -33,7 +33,6 @@ public abstract class Geometry implements Intersectable {
      * @param _emission
      */
     public Geometry(Color _emission) {
-
         this(_emission , Material.DEFAULT);
     }
 

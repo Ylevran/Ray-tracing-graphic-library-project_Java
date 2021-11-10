@@ -23,7 +23,6 @@ import java.util.List;
  */
 public class Scene {
 
-    private  String _name;
     private  Geometries _geometries = new Geometries();
 
     private Color _background;
@@ -41,7 +40,6 @@ public class Scene {
      *                 - the name of the scene (String)
      */
     public Scene(String _sceneName) {
-        this._name = _sceneName;
         this._background = null;
         this._ambientLight = null;
         this._camera = null;
